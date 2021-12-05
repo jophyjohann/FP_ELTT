@@ -35,20 +35,43 @@ target_url = 'https://codesandbox.io/embed/fp-eltt-nxted?fontsize=14&hidenavigat
 response = get(target_url)
 
 scriptse = scripts.copy()
-scriptse.append('export')
+#scriptse.append('export')
 
-def read_file(file, i):
+export_data=''
+def prepare_export_file(file_name, i):
+    global export_data
     data = response.text
-    data=data[data.find('#...start_'+file+'...#'):data.find('#...end_'+file+'...#')+12+len(file)].replace(r'\\n',r'**üü**').replace(r'\\r',r'**ää**').replace(r"\n","\n").replace(r"\r","").replace(r'**üü**',r"\n").replace(r'**ää**',r"\r").replace(r'\"','"').replace(r"\\","\\")
+    data=data[data.find('#...start_'+file_name+'...#'):data.find('#...end_'+file_name+'...#')+12+len(file_name)].replace(r'\\n',r'**üü**').replace(r'\\r',r'**ää**').replace(r"\n","\n").replace(r"\r","").replace(r'**üü**',r"\n").replace(r'**ää**',r"\r").replace(r'\"','"').replace(r"\\","\\")
     data=data.replace('sonderkrams','')
-    file = open(file+'.py', 'w')
-    data = data.replace(')\n\nplt.show()',')\n\nplt.show()\n\n# wait a second for reloading the matplotlib module due to issues\ntime.sleep(0.5)\nimportlib.reload(plt)\ntime.sleep(0.5)')
-    data = data.replace(')\n    plt.show()',')\n    plt.show()\n\n    # wait a second for reloading the matplotlib module due to issues\n    time.sleep(0.5)\n    importlib.reload(plt)\n    time.sleep(0.5)')
+    data = data.replace('plt.show()','plt.show()\n# wait a second for reloading the matplotlib module due to issues\ntime.sleep(0.5)\nimportlib.reload(plt)\ntime.sleep(0.5)')
+    #data = data.replace(')\n    plt.show()',')\n    plt.show()\n\n    # wait a second for reloading the matplotlib module due to issues\n    time.sleep(0.5)\n    importlib.reload(plt)\n    time.sleep(0.5)')
+    data = data.replace('\n\nimport','\n\nimport time\nimport')
+    data = data.replace('\n\nimport','\n\nimport importlib\nimport')
+    data = data.replace('main','main'+str(i+1))
+    file = open('export.py', 'w')
+    data = ('\n' + data.replace('#...start_'+file_name+'...#\n','').replace('#...end_'+file_name+'...#',''))
+    data = data.replace('plt.show()','#plt.show()').replace("#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\n","").replace('#plt.savefig','plt.savefig')
+    data = data.replace(data[data.find('# main python console'):data.find('start=result')+12],'')
+    export_data += data.replace('time.sleep(0.5)','#time.sleep(0.5)').replace('importlib.reload(plt)','#importlib.reload(plt)').replace('import importlib\n','').replace('import time\n','').replace('print','#print')
+    file.writelines(export_data)
+    file.close
+
+for i in range(len(scripts)):
+    prepare_export_file(scripts[i],i)
+
+
+def read_file(file_name, i):
+    data = response.text
+    data=data[data.find('#...start_'+file_name+'...#'):data.find('#...end_'+file_name+'...#')+12+len(file_name)].replace(r'\\n',r'**üü**').replace(r'\\r',r'**ää**').replace(r"\n","\n").replace(r"\r","").replace(r'**üü**',r"\n").replace(r'**ää**',r"\r").replace(r'\"','"').replace(r"\\","\\")
+    data=data.replace('sonderkrams','')
+    file = open(file_name+'.py', 'w')
+    data = data.replace('plt.show()','plt.show()\n# wait a second for reloading the matplotlib module due to issues\ntime.sleep(0.5)\nimportlib.reload(plt)\ntime.sleep(0.5)')
+    #data = data.replace(')\n    plt.show()',')\n    plt.show()\n\n    # wait a second for reloading the matplotlib module due to issues\n    time.sleep(0.5)\n    importlib.reload(plt)\n    time.sleep(0.5)')
     data = data.replace('\n\nimport','\n\nimport time\nimport')
     data = data.replace('\n\nimport','\n\nimport importlib\nimport')
     file.writelines(data)
     file.close
-
+    
 for i in range(len(scriptse)):
     read_file(scriptse[i],i)
 
