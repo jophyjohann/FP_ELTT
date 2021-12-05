@@ -8,8 +8,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 import importlib
+from scipy.optimize import *
 from scipy.interpolate import make_interp_spline
 
+
+def exp(x,C,a,b,d):
+    return C*np.exp(a*x+b)+d
 
 # Load Cu-Si data
 # t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Cu), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
@@ -39,6 +43,34 @@ plt.xlim(0, 320)
 plt.ylim(0, 3)
 plt.title(r"Resistance of Cu over Temperature")
 plt.show()
+
+
+
+# fitting the function
+plot_range = [0,1087]
+fit_range = [0,1087]
+fit_parameters = [[ "C",  "a" ,"b", "d"],
+                  [   0.1,  1, 0, 0.2],   # max bounds
+                  [0.01,  0.1, -2.5, 0.07],   # start values
+                  [0.001, 0.01, -5, 0]]   # min bounds
+popt, pcov = curve_fit(exp, T[fit_range[0]:fit_range[1]], R_P_1[fit_range[0]:fit_range[1]], fit_parameters[2], bounds=(fit_parameters[3],fit_parameters[1]))
+
+opt_fit_parameters1 = popt.copy()
+pcov1 = pcov.copy()
+print(opt_fit_parameters1)
+
+# Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Cu) reduced range with fit
+fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
+plt.plot(T[:1087],R_P_1[:1087],'.', label='Resistance of Cu')
+plt.plot(T[fit_range[0]:fit_range[1]], exp(R_P_1[fit_range[0]:fit_range[1]], *popt), 'r--', label="Fit von "+str(fit_range[0])+" bis "+str(fit_range[1]))
+plt.xlabel(r"Temperature T / K")
+plt.ylabel(r"Resistance R / $\Omega$")
+plt.legend()
+plt.xlim(0, 50)
+#plt.ylim(0, 3)
+plt.title(r"Resistance of Cu over Temperature")
+plt.show()
+
 
 
 # Plot R_T over T, (R_T = R_Thermometer/Ohm)
@@ -95,7 +127,7 @@ plt.show()
 
 # Plot R_P_2 over T, (R_P_2 = R_Probe_2/Ohm (Si))
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
-plt.plot(T,R_P_2,'-', label='Resistance of Si')
+plt.plot(T,R_P_2,'.', label='Resistance of Si')
 plt.xlabel(r"Temperature T / K")
 plt.ylabel(r"Resistance R / $\Omega$")
 plt.legend()
@@ -116,7 +148,7 @@ plt.plot(t[:790],T[:790],'-', label='Temperature')
 plt.xlabel(r"time t/s")
 plt.ylabel(r"Temperature T / K")
 plt.legend()
-plt.xlim(0, 1400)
+plt.xlim(0, 800)
 plt.ylim(0, 12)
 plt.title(r"Temperature over time with different H-Filed aplied")
 plt.show()
@@ -127,7 +159,7 @@ plt.plot(t[790:],T[790:],'-', label='Temperature')
 plt.xlabel(r"time t/s")
 plt.ylabel(r"Temperature T / K")
 plt.legend()
-plt.xlim(0, 1400)
+plt.xlim(750, 1400)
 plt.ylim(0, 12)
 plt.title(r"Temperature over time with different H-Filed aplied")
 plt.show()
@@ -168,5 +200,20 @@ plt.legend()
 #plt.ylim(0.04, 0.08)
 plt.title(r"Resistance of Thermometer 1 over Temperature")
 plt.show()
+
+"""
+# Plot R_P_2 over T, (R_P_2 = R_Probe_2/Ohm (Si))
+fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
+plt.plot(T,R_P_2,'-', label='Resistance of Si')
+plt.xlabel(r"Temperature T / K")
+plt.ylabel(r"Resistance R / $\Omega$")
+plt.legend()
+#plt.xlim(0, 320)
+#plt.ylim(0, 120)
+#plt.yscale('log')
+plt.title(r"Resistance of Si over Temperature")
+plt.show()
+"""
+
 
 #...end_script1...#
