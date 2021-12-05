@@ -6,6 +6,9 @@
 
 from requests import get
 import importlib
+import os
+import sys
+import time
 
 #...start_synch_files...#
 # synch the files with online storage on trinket python console over github (dont forget to push to repo on github when files changed)
@@ -75,6 +78,34 @@ def read_file(file_name, i):
 for i in range(len(scriptse)):
     read_file(scriptse[i],i)
 
+
+def detect_changes():
+    refreshed = False
+    response = get(target_url)
+    for i in range(len(scriptse)):
+        file_name = scripts[i]
+        data = response.text
+        data=data[data.find('#...start_'+file_name+'...#'):data.find('#...end_'+file_name+'...#')+12+len(file_name)].replace(r'\\n',r'**üü**').replace(r'\\r',r'**ää**').replace(r"\n","\n").replace(r"\r","").replace(r'**üü**',r"\n").replace(r'**ää**',r"\r").replace(r'\"','"').replace(r"\\","\\")
+        data=data.replace('sonderkrams','')
+        file = open(file_name+'.py', 'r')
+        data = data.replace('plt.show()','plt.show()\n# wait a second for reloading the matplotlib module due to issues\ntime.sleep(0.5)\nimportlib.reload(plt)\ntime.sleep(0.5)')
+        #data = data.replace(')\n    plt.show()',')\n    plt.show()\n\n    # wait a second for reloading the matplotlib module due to issues\n    time.sleep(0.5)\n    importlib.reload(plt)\n    time.sleep(0.5)')
+        data = data.replace('\n\nimport','\n\nimport time\nimport')
+        data = data.replace('\n\nimport','\n\nimport importlib\nimport')
+        if data != file.read():
+            print("Changes detected..auto reloading..")
+            print(200*"_"+"\n"+200*"_")
+            for j in range(len(scripts)):
+                read_file(scripts[j],j)
+            # resfreh whole page
+            
+            sys.stdout.flush()
+            os.execl(sys.executable, sys.executable, *sys.argv)
+            
+            #os.execl(sys.executable, 'python', __file__, *sys.argv[1:])
+
+
+
 #print('Typing in the number of script to execute or hit ENTER to continue with executing all scripts..')
 
 
@@ -121,6 +152,7 @@ while(True):
           exec_file(i+1)
 
     print('\nExecuted sucessfully...')
+    
     y = input()
     if y != '' and y != x:
         x = y
@@ -130,7 +162,16 @@ while(True):
     else:
         for i in range(len(scripts)):
             read_file(scripts[i],i)
-            
+    '''
+    while(True):
+        detect_changes()    #wait and check for Changes
+        
+        #sys.stdout.flush()
+        #os.execv(sys.argv[0], sys.argv)
+        
+        sys.stdout.flush()
+        os.execl(sys.executable, 'python', __file__, *sys.argv[1:])
+    '''
 
 
 #...end_run...#
