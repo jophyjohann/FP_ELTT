@@ -54,7 +54,7 @@ plt.show()
 
 # fitting the function
 plot_range = [0,1087]
-fit_range = [0,900]
+fit_range = [0,880]
 
 fit_parameters = [["a" ,"b", "c"],   
                   [ 1e-5,     -0.01, 0.1],      # max bounds
