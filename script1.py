@@ -54,12 +54,12 @@ plt.show()
 
 # fitting the function
 plot_range = [0,1087]
-fit_range = [0,800]
+fit_range = [0,900]
 
 fit_parameters = [["a" ,"b", "c"],   
-                  [ 0.00003,     -0.01, 0.1],      # max bounds
-                  [0.00001,   -4.2, 0.07],    # start values
-                  [0.000005, -10, 0]]     # min bounds
+                  [ 1e-5,     -0.01, 0.1],      # max bounds
+                  [2e-6,   -4.2, 0.07],    # start values
+                  [1e-6, -10, 0]]     # min bounds
 
 
 popt, pcov = curve_fit(func1, T[fit_range[0]:fit_range[1]], R_P_1[fit_range[0]:fit_range[1]], fit_parameters[2], bounds=(fit_parameters[3],fit_parameters[1]))
