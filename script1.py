@@ -15,6 +15,9 @@ from scipy.interpolate import make_interp_spline
 def exp(x,C,a,b,d):
     return C*np.exp(a*x+b)+d
 
+def lin(x,m,n):
+    return m*x+n
+
 # Load Cu-Si data
 # t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Cu), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
 t, T, R_P_1, R_T, R_P_2 = np.loadtxt("Heinzelmann_Vincent_Cu-Si.dat",  unpack = True, skiprows = 6)
@@ -48,21 +51,29 @@ plt.show()
 
 # fitting the function
 plot_range = [0,1087]
-fit_range = [0,1087]
+fit_range = [0,800]
+# conversion factor
+f = 22
 fit_parameters = [[ "C",  "a" ,"b", "d"],
-                  [   0.1,  1, 0, 0.2],   # max bounds
-                  [0.01,  0.1, -2.5, 0.07],   # start values
-                  [0.001, 0.01, -5, 0]]   # min bounds
+                  [   0.1,  1, 0*f, 0.2],       # max bounds
+                  [0.01,  0.1, -2.5*f, 0.07],   # start values
+                  [0.001, 0.01, -5*f, 0]]       # min bounds
+
+
+print(T[fit_range[0]:fit_range[1]])
+print(R_P_1[fit_range[0]:fit_range[1]])
 popt, pcov = curve_fit(exp, T[fit_range[0]:fit_range[1]], R_P_1[fit_range[0]:fit_range[1]], fit_parameters[2], bounds=(fit_parameters[3],fit_parameters[1]))
 
 opt_fit_parameters1 = popt.copy()
 pcov1 = pcov.copy()
-print(opt_fit_parameters1)
+print("Fit eq: y= C*exp(a*x+b)+d")
+print("C={:.4f}, a= {:.4f}, b= {:.4f}, d= {:.4f}".format(opt_fit_parameters1[0], opt_fit_parameters1[1], opt_fit_parameters1[2], opt_fit_parameters1[3]))
 
 # Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Cu) reduced range with fit
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 plt.plot(T[:1087],R_P_1[:1087],'.', label='Resistance of Cu')
 plt.plot(T[fit_range[0]:fit_range[1]], exp(R_P_1[fit_range[0]:fit_range[1]], *popt), 'r--', label="Fit von "+str(fit_range[0])+" bis "+str(fit_range[1]))
+
 plt.xlabel(r"Temperature T / K")
 plt.ylabel(r"Resistance R / $\Omega$")
 plt.legend()
