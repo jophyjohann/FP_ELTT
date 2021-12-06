@@ -18,6 +18,9 @@ def exp(x,C,a,b,d):
 def lin(x,m,n):
     return m*x+n
 
+def func1(x,a,b,c):
+    return a*(x+b)**3 + c
+
 # Load Cu-Si data
 # t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Cu), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
 t, T, R_P_1, R_T, R_P_2 = np.loadtxt("Heinzelmann_Vincent_Cu-Si.dat",  unpack = True, skiprows = 6)
@@ -52,28 +55,24 @@ plt.show()
 # fitting the function
 plot_range = [0,1087]
 fit_range = [0,800]
-# conversion factor
-#f = 22
-f = 1
-fit_parameters = [[ "C",  "a" ,"b",  "d"],   
-                  [ 0.1,     2,  0,  0.2],      # max bounds
-                  [0.01,   0.1,-10, 0.07],    # start values
-                  [0.001,0.005,-15,    0]]     # min bounds
+
+fit_parameters = [["a" ,"b"],   
+                  [ 0.1,     10]      # max bounds
+                  [0.01,   4.2],    # start values
+                  [0.001,0.005]]     # min bounds
 
 
-#print(T[fit_range[0]:fit_range[1]])
-#print(R_P_1[fit_range[0]:fit_range[1]])
-popt, pcov = curve_fit(exp, T[fit_range[0]:fit_range[1]], R_P_1[fit_range[0]:fit_range[1]], fit_parameters[1])#, bounds=(fit_parameters[3],fit_parameters[1]))
+popt, pcov = curve_fit(func1, T[fit_range[0]:fit_range[1]], R_P_1[fit_range[0]:fit_range[1]], fit_parameters[2], bounds=(fit_parameters[3],fit_parameters[1]))
 
 opt_fit_parameters1 = popt.copy()
 pcov1 = pcov.copy()
-print("Fit eq: y= C*exp(a*(x+b))+d")
+print("Fit eq: y= a*(x+b)^3")
 print("C={:.4f} +/- {:.4f}, a= {:.4f} +/- {:.4f}, b= {:.4f} +/- {:.4f}, d= {:.4f} +/- {:.4f}".format(opt_fit_parameters1[0], np.sqrt(np.diag(pcov))[0], opt_fit_parameters1[1], np.sqrt(np.diag(pcov))[1], opt_fit_parameters1[2], np.sqrt(np.diag(pcov))[2], opt_fit_parameters1[3], np.sqrt(np.diag(pcov))[3]))
 
 # Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Cu) reduced range with fit
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 plt.plot(T[:plot_range[1]],R_P_1[:plot_range[1]],'.', label='Resistance of Cu')
-plt.plot(T[fit_range[0]:fit_range[1]], exp(T[fit_range[0]:fit_range[1]], *popt), 'r--', label="Fit von "+str(fit_range[0])+" bis "+str(fit_range[1]))
+plt.plot(T[fit_range[0]:fit_range[1]], func1(T[fit_range[0]:fit_range[1]], *popt), 'r--', label="Fit von "+str(fit_range[0])+" bis "+str(fit_range[1]))
 
 plt.xlabel(r"Temperature T / K")
 plt.ylabel(r"Resistance R / $\Omega$")
