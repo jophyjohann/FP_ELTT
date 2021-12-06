@@ -56,10 +56,10 @@ plt.show()
 plot_range = [0,1087]
 fit_range = [0,800]
 
-fit_parameters = [["a" ,"b"],   
-                  [ 0.1,     10]      # max bounds
-                  [0.01,   4.2],    # start values
-                  [0.001,0.005]]     # min bounds
+fit_parameters = [["a" ,"b", "c"],   
+                  [ 0.00003,     -0.01, 0.1],      # max bounds
+                  [0.00001,   -4.2, 0.07],    # start values
+                  [0.000005, -10, 0]]     # min bounds
 
 
 popt, pcov = curve_fit(func1, T[fit_range[0]:fit_range[1]], R_P_1[fit_range[0]:fit_range[1]], fit_parameters[2], bounds=(fit_parameters[3],fit_parameters[1]))
@@ -67,7 +67,7 @@ popt, pcov = curve_fit(func1, T[fit_range[0]:fit_range[1]], R_P_1[fit_range[0]:f
 opt_fit_parameters1 = popt.copy()
 pcov1 = pcov.copy()
 print("Fit eq: y= a*(x+b)^3")
-print("C={:.4f} +/- {:.4f}, a= {:.4f} +/- {:.4f}, b= {:.4f} +/- {:.4f}, d= {:.4f} +/- {:.4f}".format(opt_fit_parameters1[0], np.sqrt(np.diag(pcov))[0], opt_fit_parameters1[1], np.sqrt(np.diag(pcov))[1], opt_fit_parameters1[2], np.sqrt(np.diag(pcov))[2], opt_fit_parameters1[3], np.sqrt(np.diag(pcov))[3]))
+print("a= {:.4g} +/- {:.4g}, b= {:.4g} +/- {:.4g}, c= {:.4g} +/- {:.4g}".format(opt_fit_parameters1[0], np.sqrt(np.diag(pcov))[0], opt_fit_parameters1[1], np.sqrt(np.diag(pcov))[1], opt_fit_parameters1[2], np.sqrt(np.diag(pcov))[2]))
 
 # Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Cu) reduced range with fit
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
