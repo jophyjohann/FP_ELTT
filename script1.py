@@ -66,8 +66,11 @@ popt, pcov = curve_fit(func1, T[fit_range[0]:fit_range[1]], R_P_1[fit_range[0]:f
 
 opt_fit_parameters1 = popt.copy()
 pcov1 = pcov.copy()
+K_1=func1(4.2, popt[0], popt[1], popt[2])
+print(popt)
 print("Fit eq: y= a*(x+b)^3")
 print("a= {:.4g} +/- {:.4g}, b= {:.4g} +/- {:.4g}, c= {:.4g} +/- {:.4g}".format(opt_fit_parameters1[0], np.sqrt(np.diag(pcov))[0], opt_fit_parameters1[1], np.sqrt(np.diag(pcov))[1], opt_fit_parameters1[2], np.sqrt(np.diag(pcov))[2]))
+print( K_1)
 
 # Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Cu) reduced range with fit
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
