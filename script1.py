@@ -52,7 +52,7 @@ plt.show()
 
 
 
-# fitting the function
+# fitting the T^3 function
 plot_range = [0,1087]
 fit_range = [0,880]
 
@@ -70,12 +70,46 @@ K_1=func1(4.2, popt[0], popt[1], popt[2])
 print(popt)
 print("Fit eq: y= a*(x+b)^3")
 print("a= {:.4g} +/- {:.4g}, b= {:.4g} +/- {:.4g}, c= {:.4g} +/- {:.4g}".format(opt_fit_parameters1[0], np.sqrt(np.diag(pcov))[0], opt_fit_parameters1[1], np.sqrt(np.diag(pcov))[1], opt_fit_parameters1[2], np.sqrt(np.diag(pcov))[2]))
-print( K_1)
+print("R(4.2K)= {:.4g}".format(K_1))
 
-# Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Cu) reduced range with fit
+# Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Cu) reduced range with T^3 fit
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 plt.plot(T[:plot_range[1]],R_P_1[:plot_range[1]],'.', label='Resistance of Cu')
-plt.plot(T[fit_range[0]:fit_range[1]], func1(T[fit_range[0]:fit_range[1]], *popt), 'r--', label="Fit von "+str(fit_range[0])+" bis "+str(fit_range[1]))
+plt.plot(T[fit_range[0]:fit_range[1]], func1(T[fit_range[0]:fit_range[1]], *popt), 'r--', label="Fit: R= a*(T+b)^3")
+
+plt.xlabel(r"Temperature T / K")
+plt.ylabel(r"Resistance R / $\Omega$")
+plt.legend()
+#plt.xlim(0, 50)
+#plt.ylim(0, 3)
+plt.title(r"Resistance of Cu over Temperature")
+plt.show()
+
+
+# fitting the linear T function
+plot_range = [2647,3850]
+fit_range = [2647,3800]
+
+fit_parameters = [["m" ,"n"],   
+                  [   0.1,  0.0],      # max bounds
+                  [  0.01,  -0.5],    # start values
+                  [ 0.001,  -2]]     # min bounds
+
+
+popt, pcov = curve_fit(lin, T[fit_range[0]:fit_range[1]], R_P_1[fit_range[0]:fit_range[1]], fit_parameters[2], bounds=(fit_parameters[3],fit_parameters[1]))
+
+opt_fit_parameters2 = popt.copy()
+pcov2 = pcov.copy()
+#K_2=func1(300, popt[0], popt[1])
+#print(popt)
+print("Fit eq: y= m*x+n")
+print("m= {:.4g} +/- {:.4g}, n= {:.4g} +/- {:.4g}".format(opt_fit_parameters1[0], np.sqrt(np.diag(pcov))[0], opt_fit_parameters1[1], np.sqrt(np.diag(pcov))[1]))
+#print("R(4.2K)= {:.4g}".format(K_1))
+
+# Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Cu) reduced range with T^1 fit
+fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
+plt.plot(T,R_P_1,'.', label='Resistance of Cu')
+plt.plot(T[fit_range[0]:fit_range[1]], lin(T[fit_range[0]:fit_range[1]], *popt), 'r--', label="Fit: R= m*T + n")
 
 plt.xlabel(r"Temperature T / K")
 plt.ylabel(r"Resistance R / $\Omega$")
