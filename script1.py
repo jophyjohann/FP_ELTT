@@ -100,11 +100,13 @@ popt, pcov = curve_fit(lin, T[fit_range[0]:fit_range[1]], R_P_1[fit_range[0]:fit
 
 opt_fit_parameters2 = popt.copy()
 pcov2 = pcov.copy()
-#K_2=func1(300, popt[0], popt[1])
+K_2=lin(300, popt[0], popt[1])
+RRR=K_2/K_1
 #print(popt)
 print("Fit eq: y= m*x+n")
-print("m= {:.4g} +/- {:.4g}, n= {:.4g} +/- {:.4g}".format(opt_fit_parameters1[0], np.sqrt(np.diag(pcov))[0], opt_fit_parameters1[1], np.sqrt(np.diag(pcov))[1]))
-#print("R(4.2K)= {:.4g}".format(K_1))
+print("m= {:.4g} +/- {:.4g}, n= {:.4g} +/- {:.4g}".format(opt_fit_parameters2[0], np.sqrt(np.diag(pcov2))[0], opt_fit_parameters2[1], np.sqrt(np.diag(pcov2))[1]))
+print("R(300K)= {:.4g}".format(K_2))
+print("RRR=R(300K)/R(4.2K)= {:.4g}".format(RRR))
 
 # Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Cu) reduced range with T^1 fit
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
@@ -119,6 +121,24 @@ plt.legend()
 plt.title(r"Resistance of Cu over Temperature")
 plt.show()
 
+# R(T) = R_rest + R_T(T)
+# R_rest = R(4,2K) = K_1
+# R(T) = R_P_1
+# daraus folgt R_T(T) = R_P_1-K_1
+R_T = R_P_1 - K_1 # = 1.17R_T(Theta_D)*T/Theta_D -0.17R_T(Theta_D)
+# Daraus folgt Anstieg m = 1,17 R_T(Theta_D)/Theta_D, und n = -0.17R_T(Theta_D)
+# m und n oben aus linearem Fit bestimmt. (wobei von n der Wert von R_rest = K_1 abgezogen werden muss)
+# daraus folgt Theta_D = -1.17*n/(0.17*m)
+n = opt_fit_parameters2[1]-K_1
+m = opt_fit_parameters2[0]
+Theta_D_Cu = -1.17*n/(0.17*opt_fit_parameters2[0])
+
+# Gausschefehlerfortpflanzung um Delta Theta_D zu bestimmen aus fit unsicherheiten von m und n
+Delta_m = np.sqrt(np.diag(pcov2))[0]
+Delta_n = np.sqrt(np.diag(pcov2))[1]
+Delta_Theta_D = np.sqrt((Theta_D_Cu/n*Delta_n)**2 + (Theta_D_Cu/m*Delta_m)**2 )
+
+print("Debye Temp von Cu Theta_D/K = {:.4g}+\- {:.4g}".format(Theta_D_Cu, Delta_Theta_D))
 
 
 # Plot R_T over T, (R_T = R_Thermometer/Ohm)
