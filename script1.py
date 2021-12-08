@@ -285,10 +285,13 @@ pcov_Nb_2 = pcov2.copy()
 
 print("Logistic Fkt1. y = a/(1+exp(b*x +c) +d ")
 print("a = {:.4g} +\- {:.4g}, b= {:.4g} +\- {:.4g}, c= {:.4g} +\- {:.4g}, d= {:.4g} +\- {:.4g}".format(opt_fit_parameters_Nb_1[0], np.sqrt(np.diag(pcov_Nb_1))[0], opt_fit_parameters_Nb_1[1], np.sqrt(np.diag(pcov_Nb_1))[1], opt_fit_parameters_Nb_1[2], np.sqrt(np.diag(pcov_Nb_1))[2], opt_fit_parameters_Nb_1[3], np.sqrt(np.diag(pcov_Nb_1))[3]))
+print("Logistic Fkt2. y = a/(1+exp(b*x +c) +d ")
+print("a = {:.4g} +\- {:.4g}, b= {:.4g} +\- {:.4g}, c= {:.4g} +\- {:.4g}, d= {:.4g} +\- {:.4g}".format(opt_fit_parameters_Nb_2[0], np.sqrt(np.diag(pcov_Nb_2))[0], opt_fit_parameters_Nb_2[1], np.sqrt(np.diag(pcov_Nb_2))[1], opt_fit_parameters_Nb_2[2], np.sqrt(np.diag(pcov_Nb_2))[2], opt_fit_parameters_Nb_2[3], np.sqrt(np.diag(pcov_Nb_2))[3]))
+
 T_1 = np.linspace(9, 10, fit_range1[1]-fit_range1[0])
 logistic1 = logistic(T_1, *popt)     # Trying something
-logistic2 = logistic(T_1, *popt2)
-print(logistic1)
+logistic2 = logistic(T_1, *popt2)    # Works
+
 
 # Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Nb)
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
