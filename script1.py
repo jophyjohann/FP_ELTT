@@ -22,7 +22,7 @@ def func1(x,a,b,c):
     return a*(x+b)**3 + c
 
 def logistic(x, a, b, c, d):
-    return a / np.sqrt(1 + np.exp(-b * (x + c))) + d
+    return a / np.sqrt(1 + np.exp(b * (x + c))) + d
 
 # Load Cu-Si data
 # t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Cu), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
@@ -265,7 +265,7 @@ plt.show()
 
 
 # fitting the function
-fit_range1 = [350, 550]
+fit_range1 = [390, 500]
 plot_range = [0,790]
 
 fit_parameters_Nb_1 = [["a","b",  "c","d"],
@@ -277,14 +277,17 @@ popt, pcov = curve_fit(logistic, T[fit_range1[0]:fit_range1[1]], R_P_1[fit_range
 
 opt_fit_parameters_Nb_1 = popt.copy()
 pcov_Nb_1 = pcov.copy()
-
-
+print("Logistic Fkt. y = a/(1+exp(b*x +c) +d ")
+print("a = {:.4g} +\- {:.4g}, b= {:.4g} +\- {:.4g}, c= {:.4g} +\- {:.4g}, d= {:.4g} +\- {:.4g}".format(opt_fit_parameters_Nb_1[0], np.sqrt(np.diag(pcov_Nb_1))[0], opt_fit_parameters_Nb_1[1], np.sqrt(np.diag(pcov_Nb_1))[1], opt_fit_parameters_Nb_1[2], np.sqrt(np.diag(pcov_Nb_1))[2], opt_fit_parameters_Nb_1[3], np.sqrt(np.diag(pcov_Nb_1))[3]))
+T_1 = np.linspace(9, 10, fit_range1[1]-fit_range1[0])
+logistic1 = logistic(T_1, *popt)     # Trying something
+print(logistic1)
 
 # Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Nb)
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 # Warm up
 plt.plot(T[:625],R_P_1[:625],'.', label='Resistance of Nb warming up')
-plt.plot(T[fit_range1[0]:fit_range1[1]], logistic(T[fit_range1[0]:fit_range1[1]], *popt), 'b--', label="Logist. Fkt. Fit von "+str(plot_range[0])+" bis "+str(plot_range[1]))
+plt.plot(T_1, logistic1, 'g--', label="Logist. Fkt. Fit ")
 # Cool down
 plt.plot(T[625:790],R_P_1[625:790],'.', label='Resistance of Nb cooling down')
 plt.xlabel(r"Temperature T / K")
