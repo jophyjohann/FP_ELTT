@@ -21,6 +21,9 @@ def lin(x,m,n):
 def func1(x,a,b,c):
     return a*(x+b)**3 + c
 
+def logistic(x, a, b, c, d):
+    return a / np.sqrt(1 + np.exp(-b * (x + c))) + d
+
 # Load Cu-Si data
 # t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Cu), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
 t, T, R_P_1, R_T, R_P_2 = np.loadtxt("Heinzelmann_Vincent_Cu-Si.dat",  unpack = True, skiprows = 6)
@@ -129,9 +132,9 @@ R_T = R_P_1 - K_1 # = 1.17R_T(Theta_D)*T/Theta_D -0.17R_T(Theta_D)
 # Daraus folgt Anstieg m = 1,17 R_T(Theta_D)/Theta_D, und n = -0.17R_T(Theta_D)
 # m und n oben aus linearem Fit bestimmt. (wobei von n der Wert von R_rest = K_1 abgezogen werden muss)
 # daraus folgt Theta_D = -1.17*n/(0.17*m)
-n = opt_fit_parameters2[1]-K_1
+n = opt_fit_parameters2[1]
 m = opt_fit_parameters2[0]
-Theta_D_Cu = -1.17*n/(0.17*opt_fit_parameters2[0])
+Theta_D_Cu = -1.17*(n-K_1)/(0.17*opt_fit_parameters2[0])
 
 # Gausschefehlerfortpflanzung um Delta Theta_D zu bestimmen aus fit unsicherheiten von m und n
 Delta_m = np.sqrt(np.diag(pcov2))[0]
@@ -140,6 +143,25 @@ Delta_Theta_D = np.sqrt((Theta_D_Cu/n*Delta_n)**2 + (Theta_D_Cu/m*Delta_m)**2 )
 
 print("Debye Temp von Cu Theta_D/K = {:.4g}+\- {:.4g}".format(Theta_D_Cu, Delta_Theta_D))
 
+# Reduced data, ie y= R(T)/R(Theta_D), und x = T/Theta_D
+# Resistivity is rho= (A/l)*R, Calling constant C = (A/l) = pi*r^2/l
+C = np.pi*(0.08*10**(-3))/1  # Kürtzt sich einfach bei dem Plot 
+R_Theta_D = lin(Theta_D_Cu, m, n)
+rho = [T/Theta_D_Cu, R_P_1/R_Theta_D]
+
+# Plot Reduced data, ie y= R(T)/R(Theta_D), und x = T/Theta_D
+fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
+plt.plot(rho[0], rho[1],'.', label='Reduced Resistivity')
+# Add literature Data...
+plt.xlabel(r"Reduced Temperature T/$\Theta_D$")
+plt.ylabel(r"Resistance R(T) / R($\Theta_D$)")
+plt.legend()
+plt.xlim(0, 1)
+plt.ylim(0, 1)
+plt.title(r"Reduced Resistivit of Cu over reduced Temperature")
+plt.show()
+
+
 
 # Plot R_T over T, (R_T = R_Thermometer/Ohm)
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
@@ -147,8 +169,8 @@ plt.plot(T,R_T,'-', label='Resistance of Thermometer 1')
 plt.xlabel(r"Temperature T / K")
 plt.ylabel(r"Resistance R / $\Omega$")
 plt.legend()
-plt.xlim(0, 320)
-plt.ylim(0, 120)
+#plt.xlim(0, 320)
+#plt.ylim(0, 120)
 plt.title(r"Resistance of Thermometer 1 over Temperature")
 plt.show()
 
@@ -210,7 +232,15 @@ plt.show()
 # t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Nb), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
 t, T, R_P_1, R_T, R_P_2 = np.loadtxt("Heinzelmann_Vincent_Nb_H-Feld.dat",  unpack = True, skiprows = 8)
 
-# Plot T over t
+# Approximation of the B-Field out of Equation from instructions from page 20 (very bottom)
+# B = 0.03233(T/A)*I, comes from Biot-Savart at x=0
+I_1 = 8.0 # A
+I_2 = 4.0 # A
+# Daraus folgt
+B_1 =  0.03233*I_1
+B_2 =  0.03233*I_2
+
+# Plot T over t warming up and cooling down with B=0
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 plt.plot(t[:790],T[:790],'-', label='Temperature')
 plt.xlabel(r"time t/s")
@@ -218,24 +248,44 @@ plt.ylabel(r"Temperature T / K")
 plt.legend()
 plt.xlim(0, 800)
 plt.ylim(0, 12)
-plt.title(r"Temperature over time with different H-Filed aplied")
+plt.title(r"Temperature over time warming up and cooling down")
 plt.show()
 
-# Plot T over t
+# Plot T over t warming up and cooling down with B_1 and B_2 respectivly
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 plt.plot(t[790:],T[790:],'-', label='Temperature')
+plt.axvline(x=1200, color='red', linestyle='dotted', label='Change from B_1 to B_2')
 plt.xlabel(r"time t/s")
 plt.ylabel(r"Temperature T / K")
 plt.legend()
 plt.xlim(750, 1400)
 plt.ylim(0, 12)
-plt.title(r"Temperature over time with different H-Filed aplied")
+plt.title(r"Temperature over time with different B-Fileds aplied")
 plt.show()
+
+
+# fitting the function
+fit_range1 = [350, 550]
+plot_range = [0,790]
+
+fit_parameters_Nb_1 = [["a","b",  "c","d"],
+                  [ 0,  20, -9, 0.0655],     # max bounds
+                  [-0.01,  10, -9.2, 0.0645],     # start values
+                  [-0.09, 0.1, -9.8,  0.06]]     # min bounds
+
+popt, pcov = curve_fit(logistic, T[fit_range1[0]:fit_range1[1]], R_P_1[fit_range1[0]:fit_range1[1]], fit_parameters_Nb_1[2], bounds=(fit_parameters_Nb_1[3],fit_parameters_Nb_1[1]))  
+
+opt_fit_parameters_Nb_1 = popt.copy()
+pcov_Nb_1 = pcov.copy()
+
 
 
 # Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Nb)
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
+# Warm up
 plt.plot(T[:625],R_P_1[:625],'.', label='Resistance of Nb warming up')
+plt.plot(T[fit_range1[0]:fit_range1[1]], logistic(T[fit_range1[0]:fit_range1[1]], *popt), 'b--', label="Logist. Fkt. Fit von "+str(plot_range[0])+" bis "+str(plot_range[1]))
+# Cool down
 plt.plot(T[625:790],R_P_1[625:790],'.', label='Resistance of Nb cooling down')
 plt.xlabel(r"Temperature T / K")
 plt.ylabel(r"Resistance R / $\Omega$")
@@ -247,8 +297,8 @@ plt.show()
 
 # Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Nb)
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
-plt.plot(T[790:1185],R_P_1[790:1185],'.', label='Resistance of Nb warming up with H1')
-plt.plot(T[1185:],R_P_1[1185:],'.', label='Resistance of Nb cooling down with H2')
+plt.plot(T[790:1200],R_P_1[790:1200],'.', label='Resistance of Nb warming up with B_1')
+plt.plot(T[1200:],R_P_1[1200:],'.', label='Resistance of Nb cooling down with B_2')
 plt.xlabel(r"Temperature T / K")
 plt.ylabel(r"Resistance R / $\Omega$")
 plt.legend()
