@@ -149,10 +149,28 @@ C = np.pi*(0.08*10**(-3))/1  # Kürtzt sich einfach bei dem Plot
 R_Theta_D = lin(Theta_D_Cu, m, n)
 rho = [T/Theta_D_Cu, R_P_1/R_Theta_D]
 
+# Literature Values according to Instructions
+Na_T = [0.388, 0.282]    # Reduced Temp
+Na_R = [0.267, 0.152]    # Reduced Res
+Au_T = [0.328, 0.120, 0.105]
+Au_R = [0.207, 0.017, 0.009]
+Cu_T = [0.266, 0.247, 0.082, 0.062]
+Cu_R = [0.132, 0.113, 0.003, 0.002]
+Al_T = [0.230, 0.218, 0.208, 0.202]
+Al_R = [0.094, 0.079, 0.070, 0.061]
+Ni_T = [0.172, 0.163]
+Ni_R = [0.042, 0.038]
+
 # Plot Reduced data, ie y= R(T)/R(Theta_D), und x = T/Theta_D
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
-plt.plot(rho[0], rho[1],'.', label='Reduced Resistivity')
 # Add literature Data...
+plt.plot(rho[0], rho[1],'.', label='Reduced Resistivity')
+plt.plot(Na_T, Na_R,'.', label='Na')
+plt.plot(Au_T, Au_R,'.', label='Au')
+plt.plot(Cu_T, Cu_R,'.', label='Cu')
+plt.plot(Al_T, Al_R,'.', label='Al')
+plt.plot(Ni_T, Ni_R,'.', label='Ni')
+
 plt.xlabel(r"Reduced Temperature T/$\Theta_D$")
 plt.ylabel(r"Resistance R(T) / R($\Theta_D$)")
 plt.legend()
