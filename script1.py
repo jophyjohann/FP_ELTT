@@ -205,6 +205,19 @@ plt.xlim(0, 320)
 plt.title(r"Resistance of Si over Temperature")
 plt.show()
 
+# Plot ln(sigma) over 1/T, (R_P_2 = R_Probe_2/Ohm (Si))
+sigma = 
+fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
+plt.plot(1/T,R_P_2,'-', label='Resistance of Si')
+plt.xlabel(r"Temperature T / K")
+plt.ylabel(r"Conductance $\sigma$")
+plt.legend()
+plt.xlim(0, 320)
+#plt.ylim(0, 120)
+#plt.yscale('log')
+plt.title(r"Resistance of Si over Temperature")
+plt.show()
+
 # Load Nb-Si data
 # t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Nb), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
 t, T, R_P_1, R_T, R_P_2 = np.loadtxt("Heinzelmann_Vincent_Nb-Si.dat",  unpack = True, skiprows = 6)
