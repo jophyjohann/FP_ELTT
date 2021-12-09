@@ -300,8 +300,8 @@ plt.plot(T[:625],R_P_1[:625],'.', label='Resistance of Nb warming up')
 
 # Cool down
 plt.plot(T[625:790],R_P_1[625:790],'.', label='Resistance of Nb cooling down')
-plt.plot(T_1, logistic1, 'g--', label="Logist. Fkt. Fit ")
-plt.plot(T_1, logistic2, 'r--', label="Logist. Fkt. Fit ")
+plt.plot(T_1, logistic1, 'g--', label="Logist. Fkt. Fit warming up")
+plt.plot(T_1, logistic2, 'r--', label="Logist. Fkt. Fit cooling down")
 plt.xlabel(r"Temperature T / K")
 plt.ylabel(r"Resistance R / $\Omega$")
 plt.legend()
@@ -310,10 +310,32 @@ plt.ylim(0.05, 0.075)
 plt.title(r"Resistance of Nb over Temperature")
 plt.show()
 
+# fitting the function
+fit_range1 = [390, 500]
+fit_range2 = [700, 730]
+plot_range = [0,790]
+
+fit_parameters_Nb_3 = [["a","b",  "c","d"],
+                  [ 0,  20, -9, 0.0655],     # max bounds
+                  [-0.01,  10, -9.2, 0.0645],     # start values
+                  [-0.09, 0.1, -9.8,  0.06]]     # min bounds
+
+popt, pcov = curve_fit(logistic, T[fit_range1[0]:fit_range1[1]], R_P_1[fit_range1[0]:fit_range1[1]], fit_parameters_Nb_3[2], bounds=(fit_parameters_Nb_3[3],fit_parameters_Nb_3[1]))  
+popt4, pcov4 = curve_fit(logistic, T[fit_range2[0]:fit_range2[1]], R_P_1[fit_range2[0]:fit_range2[1]], fit_parameters_Nb_3[2], bounds=(fit_parameters_Nb_3[3],fit_parameters_Nb_3[1]))  
+
+opt_fit_parameters_Nb_3 = popt.copy()
+pcov_Nb_3 = pcov.copy()
+
+opt_fit_parameters_Nb_4 = popt4.copy()
+pcov_Nb_4 = pcov4.copy()
+
 # Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Nb)
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 plt.plot(T[790:1200],R_P_1[790:1200],'.', label='Resistance of Nb warming up with B_1')
 plt.plot(T[1200:],R_P_1[1200:],'.', label='Resistance of Nb cooling down with B_2')
+plt.plot(T[790:1200],logistic(T[790:1200], *opt_fit_parameters_Nb_3),'.', label='Logistic Fkt. Fit warming up with B_1')
+plt.plot(T[1200:],logistic(T[1200:], *opt_fit_parameters_Nb_4),'.', label='Logistic Fkt. Fit warming up with B_1')
+
 plt.xlabel(r"Temperature T / K")
 plt.ylabel(r"Resistance R / $\Omega$")
 plt.legend()
