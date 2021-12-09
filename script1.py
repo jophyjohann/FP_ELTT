@@ -311,8 +311,8 @@ plt.title(r"Resistance of Nb over Temperature")
 plt.show()
 
 # fitting the function
-fit_range1 = [390, 500]
-fit_range2 = [700, 730]
+fit_range1 = [1050, 1080]
+fit_range2 = [1260, 1285]
 plot_range = [0,790]
 
 fit_parameters_Nb_3 = [["a","b",  "c","d"],
@@ -333,8 +333,8 @@ pcov_Nb_4 = pcov4.copy()
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 plt.plot(T[790:1200],R_P_1[790:1200],'.', label='Resistance of Nb warming up with B_1')
 plt.plot(T[1200:],R_P_1[1200:],'.', label='Resistance of Nb cooling down with B_2')
-plt.plot(T[790:1200],logistic(T[790:1200], *opt_fit_parameters_Nb_3),'.', label='Logistic Fkt. Fit warming up with B_1')
-plt.plot(T[1200:],logistic(T[1200:], *opt_fit_parameters_Nb_4),'.', label='Logistic Fkt. Fit warming up with B_1')
+plt.plot(T[790:1200],logistic(T[790:1200], *opt_fit_parameters_Nb_3),'--', label='Logistic Fkt. Fit warming up with B_1')
+plt.plot(T[1200:],logistic(T[1200:], *opt_fit_parameters_Nb_4),'--', label='Logistic Fkt. Fit cooling down with B_2')
 
 plt.xlabel(r"Temperature T / K")
 plt.ylabel(r"Resistance R / $\Omega$")
