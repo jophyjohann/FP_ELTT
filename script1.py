@@ -32,6 +32,7 @@ def func2(x, A, B, c, d, e):
 t, T, R_P_1, R_T, R_P_2 = np.loadtxt("Heinzelmann_Vincent_Cu-Si.dat",  unpack = True, skiprows = 6)
 
 #print(t, T, R_P_1, R_T, R_P_2)
+print(T)
 
 # Plot T over t
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
@@ -336,6 +337,7 @@ I_2 = 4.0 # A
 # Daraus folgt
 B_1 =  0.03233*I_1
 B_2 =  0.03233*I_2
+print(B_1, B_2)
 
 # Plot T over t warming up and cooling down with B=0
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
