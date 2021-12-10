@@ -319,8 +319,8 @@ plt.title(r"$\ln(\sigma)$ of Si over inversed Temperature")
 #plt.savefig('log_sigma_over_rec_temp2_Fit.pdf', bbox_inches='tight')
 plt.show()
 
-print(popt)
-print(pcov)
+print("Parameter des Fits:\n")
+print("A= {:.4g} +/- {:.4g}, B= {:.4g} +/- {:.4g}, c= {:.4g} +/- {:.4g}, d= {:.4g} +/- {:.4g}, e= {:.4g} +/- {:.4g}, ".format(popt[0],np.sqrt(np.diag(pcov))[0],popt[1],np.sqrt(np.diag(pcov))[1],popt[2],np.sqrt(np.diag(pcov))[2],popt[3],np.sqrt(np.diag(pcov))[3],popt[4],np.sqrt(np.diag(pcov))[4]))
 kbt=1.38064852e-23
 e=1.602176634e-19
 #print(popt[1])
