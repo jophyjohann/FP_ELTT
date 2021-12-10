@@ -25,7 +25,7 @@ def logistic(x, a, b, c, d):
     return a / np.sqrt(1 + np.exp(b * (x + c))) + d
 
 def func2(x, A, B, c):
-    np.log(A*(1/x + c)**(-3/2)) - B/x
+    return np.log(A*(1/x + c)**(-3/2)) - B/x
 
 # Load Cu-Si data
 # t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Cu), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
@@ -288,16 +288,32 @@ plt.title(r"Resistance of Si over Temperature")
 #plt.savefig('sigma_over_T.pdf', bbox_inches='tight')
 plt.show()
 
+# Fit func2
+fit_range1 = [0, 4090]
+plot_range = [0,4090]
+
+fit_parameters_Si = [["A","B", "c"],
+                  [ 15   ,  15, 100  ],     # max bounds
+                  [1.2,  7, 15],     # start values
+                  [0.5, 0, 1]]     # min bounds
+x = 1/T
+y= np.log(sigma)
+
+popt, pcov = curve_fit(func2, x[fit_range1[0]:fit_range1[1]], y[fit_range1[0]:fit_range1[1]], fit_parameters_Si[2], bounds=(fit_parameters_Si[3],fit_parameters_Si[1]))  
+popt_sigma = popt.copy()
+pcov_sigma = pcov.copy()
+
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
-plt.plot(1/T,np.log(sigma),'.', label='Conductance of Si')
+plt.plot(x, y,'.', label='Conductance of Si')
+plt.plot(x, func2(x, *popt_sigma), 'r--', label="Fit")
 plt.xlabel(r"1/Temperature 1/T / 1/K")
 plt.ylabel(r"Conductance ln($\sigma$)/ln(($\Omega$*m)^-1)")
 plt.legend()
-plt.xlim(0, 0.04)
+#plt.xlim(0, 0.04)
 #plt.ylim(0, 120)
 #plt.yscale('log')
 plt.title(r"Resistance of Si over Temperature")
-#plt.savefig('log_sigma_over_rec_temp2.pdf', bbox_inches='tight')
+#plt.savefig('log_sigma_over_rec_temp2_Fit.pdf', bbox_inches='tight')
 plt.show()
 
 
@@ -335,6 +351,7 @@ plt.legend()
 plt.xlim(750, 1400)
 plt.ylim(0, 12)
 plt.title(r"Temperature over time with different B-Fileds aplied")
+#plt.savefig('T_over_t_B1_B2.pdf', bbox_inches='tight')
 plt.show()
 
 
@@ -380,6 +397,7 @@ plt.legend()
 #plt.xlim(0, 12)
 plt.ylim(0.05, 0.075)
 plt.title(r"Resistance of Nb over Temperature")
+#plt.savefig('logistic_fits1.pdf', bbox_inches='tight')
 plt.show()
 
 # fitting the function
@@ -420,6 +438,7 @@ plt.legend()
 #plt.xlim(0, 12)
 plt.ylim(0.05, 0.075)
 plt.title(r"Resistance of Nb over Temperature")
+#plt.savefig('logistic_fits2.pdf', bbox_inches='tight')
 plt.show()
 
 
@@ -432,6 +451,7 @@ plt.legend()
 #plt.xlim(0, 12)
 #plt.ylim(0.04, 0.08)
 plt.title(r"Resistance of Thermometer 1 over Temperature")
+#plt.savefig('Thermometer2.pdf', bbox_inches='tight')
 plt.show()
 
 """
