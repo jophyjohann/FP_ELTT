@@ -24,8 +24,8 @@ def func1(x,a,b,c):
 def logistic(x, a, b, c, d):
     return a / np.sqrt(1 + np.exp(b * (x + c))) + d
 
-def func2(x, A, B, c):
-    return np.log(A*(1/x + c)**(-3/2)) - B/x
+def func2(x, a, A, B, c, d, e):
+    return -a*np.log(A*(1/(e*(x + c)))**(-3/2)) - a*B/(e*(x + c)) + d
 
 # Load Cu-Si data
 # t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Cu), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
@@ -289,14 +289,16 @@ plt.title(r"Resistance of Si over Temperature")
 plt.show()
 
 # Fit func2
-fit_range1 = [0, 4090]
-plot_range = [0,4090]
+fit_range1 = [900, 3409]
+fit_plot_range1 = [900, 3409]
+plot_range = [0,3709]
 
-fit_parameters_Si = [["A","B", "c"],
-                  [ 15   ,  15, 100  ],     # max bounds
-                  [1.2,  7, 15],     # start values
-                  [0.5, 0, 1]]     # min bounds
+fit_parameters_Si = [["a", "A","B","c"  ,"d","e"],
+                    [2   , 5  , 15,    0, 5, 5000],     # max bounds
+                    [1   ,0.5 ,  8,-1e-3,  3, 3000],     # start values 
+                    [0.5 ,0.1 ,  1,-10e-3,  0, 1000]]     # min bounds
 x = 1/T
+#print(x)
 y= np.log(sigma)
 
 popt, pcov = curve_fit(func2, x[fit_range1[0]:fit_range1[1]], y[fit_range1[0]:fit_range1[1]], fit_parameters_Si[2], bounds=(fit_parameters_Si[3],fit_parameters_Si[1]))  
@@ -304,8 +306,8 @@ popt_sigma = popt.copy()
 pcov_sigma = pcov.copy()
 
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
-plt.plot(x, y,'.', label='Conductance of Si')
-plt.plot(x, func2(x, *popt_sigma), 'r--', label="Fit")
+plt.plot(x[plot_range[0]:plot_range[1]], y[plot_range[0]:plot_range[1]],'.', label='Conductance of Si')
+plt.plot(x[fit_plot_range1[0]:fit_plot_range1[1]], func2(x, *popt_sigma)[fit_plot_range1[0]:fit_plot_range1[1]], 'r--', label="Fit")
 plt.xlabel(r"1/Temperature 1/T / 1/K")
 plt.ylabel(r"Conductance ln($\sigma$)/ln(($\Omega$*m)^-1)")
 plt.legend()
@@ -316,6 +318,7 @@ plt.title(r"Resistance of Si over Temperature")
 #plt.savefig('log_sigma_over_rec_temp2_Fit.pdf', bbox_inches='tight')
 plt.show()
 
+print(popt)
 
 # Load Nb-H-Field data
 # t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Nb), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
