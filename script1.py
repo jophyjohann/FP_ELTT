@@ -24,6 +24,9 @@ def func1(x,a,b,c):
 def logistic(x, a, b, c, d):
     return a / np.sqrt(1 + np.exp(b * (x + c))) + d
 
+def func2(x, A, B, c):
+    np.log(A*(1/x + c)**(-3/2)) - B/x
+
 # Load Cu-Si data
 # t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Cu), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
 t, T, R_P_1, R_T, R_P_2 = np.loadtxt("Heinzelmann_Vincent_Cu-Si.dat",  unpack = True, skiprows = 6)
@@ -164,7 +167,7 @@ Ni_R = [0.042, 0.038]
 # Plot Reduced data, ie y= R(T)/R(Theta_D), und x = T/Theta_D
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 # Add literature Data...
-plt.plot(rho[0], rho[1],'.', label='Reduced Resistivity')
+plt.plot(rho[0], rho[1],'-', label='Reduced Resistivity')
 plt.plot(Na_T, Na_R,'.', label='Na')
 plt.plot(Au_T, Au_R,'.', label='Au')
 plt.plot(Cu_T, Cu_R,'.', label='Cu')
@@ -206,16 +209,16 @@ plt.title(r"Resistance of Si over Temperature")
 plt.show()
 
 # Plot ln(sigma) over 1/T, (R_P_2 = R_Probe_2/Ohm (Si))
-sigma = 
+sigma = 6.5*10**(-3)/(R_P_2*5.4*10**(-6))
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
-plt.plot(1/T,R_P_2,'-', label='Resistance of Si')
-plt.xlabel(r"Temperature T / K")
-plt.ylabel(r"Conductance $\sigma$")
+plt.plot(1/T, np.log(sigma),'-', label='Conductance of Si')
+plt.xlabel(r"1/Temperature 1/T / 1/K")
+plt.ylabel(r"Conductivity ln($\sigma$)/ln(($\Omega$*m)^-1)")
 plt.legend()
-plt.xlim(0, 320)
+plt.xlim(0, 0.04)
 #plt.ylim(0, 120)
 #plt.yscale('log')
-plt.title(r"Resistance of Si over Temperature")
+plt.title(r"Conductivity of Si over Temperature")
 plt.show()
 
 # Load Nb-Si data
@@ -253,6 +256,30 @@ plt.xlabel(r"Temperature T / K")
 plt.ylabel(r"Resistance R / $\Omega$")
 plt.legend()
 plt.xlim(0, 320)
+#plt.ylim(0, 0.120)
+#plt.yscale('log')
+plt.title(r"Resistance of Si over Temperature")
+plt.show()
+
+# Plot ln(sigma) over 1/T, (R_P_2 = R_Probe_2/Ohm (Si))
+sigma = 6.5*10**(-3)/(R_P_2*5.4*10**(-6))
+fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
+plt.plot(T,sigma,'.', label='Conductance of Si')
+plt.xlabel(r"Temperature")
+plt.ylabel(r"simga")
+plt.legend()
+#plt.xlim(0, 0.04)
+#plt.ylim(0, 120)
+#plt.yscale('log')
+plt.title(r"Resistance of Si over Temperature")
+plt.show()
+
+fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
+plt.plot(1/T,np.log(sigma),'.', label='Conductance of Si')
+plt.xlabel(r"1/Temperature 1/T / 1/K")
+plt.ylabel(r"Conductance ln($\sigma$)/ln(($\Omega$*m)^-1)")
+plt.legend()
+plt.xlim(0, 0.04)
 #plt.ylim(0, 120)
 #plt.yscale('log')
 plt.title(r"Resistance of Si over Temperature")
