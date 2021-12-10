@@ -24,8 +24,8 @@ def func1(x,a,b,c):
 def logistic(x, a, b, c, d):
     return a / np.sqrt(1 + np.exp(b * (x + c))) + d
 
-def func2(x, a, A, B, c, d, e):
-    return -a*np.log(A*(1/(e*(x + c)))**(-3/2)) - a*B/(e*(x + c)) + d
+def func2(x, A, B, c, d, e):
+    return -np.log(A*(1/(e*(x + c)))**(-3/2)) - B/(e*(x + c)) + d
 
 # Load Cu-Si data
 # t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Cu), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
@@ -294,8 +294,8 @@ fit_plot_range1 = [400, 3000]
 plot_range = [0,3709]
 
 
-fit_parameters_Si = [["a", "A","B","c"  ,"d","e"],
-                    [1   ,0.5 ,  8,-1e-3,  3, 3000]]     # start values 
+fit_parameters_Si = [["A","B","c" ,"d","e"],
+                    [0.3 ,  8,-1e-3,  3, 3000]]     # start values 
                     
 x = 1/T
 #print(x)
@@ -319,6 +319,11 @@ plt.title(r"Resistance of Si over Temperature")
 plt.show()
 
 print(popt)
+kbt=1.38064852e-23
+e=1.602176634e-19
+print(popt[1])
+print(popt[4])
+print("E = {:.4g} eV".format(popt[1]*kbt/(e*popt[3])))
 
 # Load Nb-H-Field data
 # t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Nb), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
