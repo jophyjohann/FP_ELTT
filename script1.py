@@ -42,6 +42,7 @@ plt.legend()
 plt.xlim(0, 5500)
 plt.ylim(0, 320)
 plt.title(r"Temperature over time of the Warm up process")
+#plt.savefig('T_over_t_warming.pdf', bbox_inches='tight')
 plt.show()
 
 
@@ -54,6 +55,7 @@ plt.legend()
 plt.xlim(0, 320)
 plt.ylim(0, 3)
 plt.title(r"Resistance of Cu over Temperature")
+#plt.savefig('R_over_T(Cu)_warming.pdf', bbox_inches='tight')
 plt.show()
 
 
@@ -89,6 +91,7 @@ plt.legend()
 #plt.xlim(0, 50)
 #plt.ylim(0, 3)
 plt.title(r"Resistance of Cu over Temperature")
+#plt.savefig('R_over_T(Cu)_Fit1.pdf', bbox_inches='tight')
 plt.show()
 
 
@@ -125,6 +128,7 @@ plt.legend()
 #plt.xlim(0, 50)
 #plt.ylim(0, 3)
 plt.title(r"Resistance of Cu over Temperature")
+#plt.savefig('R_over_T(Cu)_Fit2.pdf', bbox_inches='tight')
 plt.show()
 
 # R(T) = R_rest + R_T(T)
@@ -180,6 +184,7 @@ plt.legend()
 plt.xlim(0, 1)
 plt.ylim(0, 1)
 plt.title(r"Reduced Resistivit of Cu over reduced Temperature")
+#plt.savefig('Reduced_resisitivity.pdf', bbox_inches='tight')
 plt.show()
 
 
@@ -193,6 +198,7 @@ plt.legend()
 #plt.xlim(0, 320)
 #plt.ylim(0, 120)
 plt.title(r"Resistance of Thermometer 1 over Temperature")
+#plt.savefig('R_Thermometer.pdf', bbox_inches='tight')
 plt.show()
 
 
@@ -206,6 +212,7 @@ plt.xlim(0, 320)
 #plt.ylim(0, 120)
 #plt.yscale('log')
 plt.title(r"Resistance of Si over Temperature")
+#plt.savefig('R_over_T(Si).pdf', bbox_inches='tight')
 plt.show()
 
 # Plot ln(sigma) over 1/T, (R_P_2 = R_Probe_2/Ohm (Si))
@@ -219,6 +226,7 @@ plt.xlim(0, 0.04)
 #plt.ylim(0, 120)
 #plt.yscale('log')
 plt.title(r"Conductivity of Si over Temperature")
+#plt.savefig('log_sigma_over_inverse_temp.pdf', bbox_inches='tight')
 plt.show()
 
 # Load Nb-Si data
@@ -234,6 +242,7 @@ plt.legend()
 plt.xlim(0, 4400)
 plt.ylim(0, 300)
 plt.title(r"Temperature over time of the cool down process")
+#plt.savefig('T_over_t_cooling.pdf', bbox_inches='tight')
 plt.show()
 
 
@@ -246,6 +255,7 @@ plt.legend()
 plt.xlim(0, 320)
 #plt.ylim(0, 3)
 plt.title(r"Resistance of Nb over Temperature")
+#plt.savefig('T_over_R(Nb).pdf', bbox_inches='tight')
 plt.show()
 
 
@@ -259,6 +269,7 @@ plt.xlim(0, 320)
 #plt.ylim(0, 0.120)
 #plt.yscale('log')
 plt.title(r"Resistance of Si over Temperature")
+#plt.savefig('R_over_T(Si2).pdf', bbox_inches='tight')
 plt.show()
 
 # Plot ln(sigma) over 1/T, (R_P_2 = R_Probe_2/Ohm (Si))
@@ -274,6 +285,7 @@ plt.legend()
 #plt.ylim(0, 120)
 #plt.yscale('log')
 plt.title(r"Resistance of Si over Temperature")
+#plt.savefig('sigma_over_T.pdf', bbox_inches='tight')
 plt.show()
 
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
@@ -285,6 +297,7 @@ plt.xlim(0, 0.04)
 #plt.ylim(0, 120)
 #plt.yscale('log')
 plt.title(r"Resistance of Si over Temperature")
+#plt.savefig('log_sigma_over_rec_temp2.pdf', bbox_inches='tight')
 plt.show()
 
 
@@ -309,6 +322,7 @@ plt.legend()
 plt.xlim(0, 800)
 plt.ylim(0, 12)
 plt.title(r"Temperature over time warming up and cooling down")
+#plt.savefig('T_over_t(B0).pdf', bbox_inches='tight')
 plt.show()
 
 # Plot T over t warming up and cooling down with B_1 and B_2 respectivly
