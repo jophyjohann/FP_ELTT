@@ -293,15 +293,15 @@ fit_range1 = [400, 3000]
 fit_plot_range1 = [400, 3000]
 plot_range = [0,3709]
 
+
 fit_parameters_Si = [["a", "A","B","c"  ,"d","e"],
-                    [2   , 5  , 15,    0, 5, 5000],     # max bounds
-                    [1   ,0.5 ,  8,-1e-3,  3, 3000],     # start values 
-                    [0.5 ,0.1 ,  1,-10e-3,  0, 1000]]     # min bounds
+                    [1   ,0.5 ,  8,-1e-3,  3, 3000]]     # start values 
+                    
 x = 1/T
 #print(x)
 y= np.log(sigma)
 
-popt, pcov = curve_fit(func2, x[fit_range1[0]:fit_range1[1]], y[fit_range1[0]:fit_range1[1]], fit_parameters_Si[2], bounds=(fit_parameters_Si[3],fit_parameters_Si[1]))  
+popt, pcov = curve_fit(func2, x[fit_range1[0]:fit_range1[1]], y[fit_range1[0]:fit_range1[1]], fit_parameters_Si[1])  
 popt_sigma = popt.copy()
 pcov_sigma = pcov.copy()
 
