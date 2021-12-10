@@ -360,7 +360,7 @@ plt.ylabel(r"Temperature T / K")
 plt.legend()
 plt.xlim(750, 1400)
 plt.ylim(0, 12)
-plt.title(r"Temperature over time with different B-Fileds aplied")
+plt.title(r"Temperature over time with different B-Fileds applied")
 #plt.savefig('T_over_t_B1_B2.pdf', bbox_inches='tight')
 plt.show()
 
