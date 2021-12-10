@@ -315,7 +315,7 @@ plt.legend()
 #plt.xlim(0, 0.04)
 #plt.ylim(0, 120)
 #plt.yscale('log')
-plt.title(r"Resistance of Si over Temperature")
+plt.title(r"$\ln(\sigma)$ of Si over inversed Temperature")
 #plt.savefig('log_sigma_over_rec_temp2_Fit.pdf', bbox_inches='tight')
 plt.show()
 
@@ -324,7 +324,7 @@ kbt=1.38064852e-23
 e=1.602176634e-19
 print(popt[1])
 print(popt[4])
-print("E = {:.4g} eV".format(popt[1]*kbt/(e*popt[3])))
+print("E = {:.4g} eV".format(popt[1]*kbt/(e*1/popt[4])))
 
 # Load Nb-H-Field data
 # t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Nb), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
@@ -337,7 +337,7 @@ I_2 = 4.0 # A
 # Daraus folgt
 B_1 =  0.03233*I_1
 B_2 =  0.03233*I_2
-print(B_1, B_2)
+#print(B_1, B_2)
 
 # Plot T over t warming up and cooling down with B=0
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
