@@ -289,8 +289,8 @@ plt.title(r"Resistance of Si over Temperature")
 plt.show()
 
 # Fit func2
-fit_range1 = [900, 3409]
-fit_plot_range1 = [900, 3409]
+fit_range1 = [400, 2500]
+fit_plot_range1 = [400, 2500]
 plot_range = [0,3709]
 
 fit_parameters_Si = [["a", "A","B","c"  ,"d","e"],
