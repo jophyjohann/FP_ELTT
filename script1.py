@@ -262,6 +262,9 @@ plt.title(r"Resistance of Si over Temperature")
 plt.show()
 
 # Plot ln(sigma) over 1/T, (R_P_2 = R_Probe_2/Ohm (Si))
+print(min(R_P_2))
+
+
 sigma = 6.5*10**(-3)/(R_P_2*5.4*10**(-6))
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 plt.plot(T,sigma,'.', label='Conductance of Si')
