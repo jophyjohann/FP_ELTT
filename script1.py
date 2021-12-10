@@ -320,10 +320,11 @@ plt.title(r"$\ln(\sigma)$ of Si over inversed Temperature")
 plt.show()
 
 print(popt)
+print(pcov)
 kbt=1.38064852e-23
 e=1.602176634e-19
-print(popt[1])
-print(popt[4])
+#print(popt[1])
+#print(popt[4])
 print("E = {:.4g} eV".format(popt[1]*kbt/(e*1/popt[4])))
 
 # Load Nb-H-Field data
