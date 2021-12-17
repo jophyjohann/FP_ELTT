@@ -126,8 +126,8 @@ plt.plot(T[fit_range[0]:fit_range[1]], lin(T[fit_range[0]:fit_range[1]], *popt),
 plt.xlabel(r"Temperature T / K")
 plt.ylabel(r"Resistance R / $\Omega$")
 plt.legend()
-#plt.xlim(0, 50)
-#plt.ylim(0, 3)
+plt.xlim(0, 320)
+plt.ylim(0, 3)
 plt.title(r"Resistance of Cu over Temperature")
 #plt.savefig('R_over_T(Cu)_Fit2.pdf', bbox_inches='tight')
 plt.show()
@@ -306,9 +306,21 @@ popt, pcov = curve_fit(func2, x[fit_range1[0]:fit_range1[1]], y[fit_range1[0]:fi
 popt_sigma = popt.copy()
 pcov_sigma = pcov.copy()
 
+# linear fit
+fit_range2 = [2650, 3415]
+fit_plot_range2 = [2650, 3415]
+
+fit_parameters_Si_lin = [["m", "n"],
+                         [-1  ,   1]]     # start values
+
+popt, pcov = curve_fit(lin, x[fit_range2[0]:fit_range2[1]], y[fit_range2[0]:fit_range2[1]], fit_parameters_Si_lin[1])  
+popt_sigma_lin = popt.copy()
+pcov_sigma_lin = pcov.copy()
+
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 plt.plot(x[plot_range[0]:plot_range[1]], y[plot_range[0]:plot_range[1]],'.', label='Conductance of Si')
 plt.plot(x[fit_plot_range1[0]:fit_plot_range1[1]], func2(x, *popt_sigma)[fit_plot_range1[0]:fit_plot_range1[1]], 'r--', label="Fit")
+plt.plot(x[fit_plot_range2[0]:fit_plot_range2[1]], lin(x, *popt_sigma_lin)[fit_plot_range2[0]:fit_plot_range2[1]], 'y--', label="Linear-Fit")
 plt.xlabel(r"1/Temperature 1/T / 1/K")
 plt.ylabel(r"Conductance ln($\sigma$)/ln(($\Omega$*m)^-1)")
 plt.legend()
@@ -320,12 +332,12 @@ plt.title(r"$\ln(\sigma)$ of Si over inversed Temperature")
 plt.show()
 
 print("Parameter des Fits:\n")
-print("A= {:.4g} +/- {:.4g}, B= {:.4g} +/- {:.4g}, c= {:.4g} +/- {:.4g}, d= {:.4g} +/- {:.4g}, e= {:.4g} +/- {:.4g}, ".format(popt[0],np.sqrt(np.diag(pcov))[0],popt[1],np.sqrt(np.diag(pcov))[1],popt[2],np.sqrt(np.diag(pcov))[2],popt[3],np.sqrt(np.diag(pcov))[3],popt[4],np.sqrt(np.diag(pcov))[4]))
+print("A= {:.4g} +/- {:.4g}, B= {:.4g} +/- {:.4g}, c= {:.4g} +/- {:.4g}, d= {:.4g} +/- {:.4g}, e= {:.4g} +/- {:.4g}, ".format(popt_sigma[0],np.sqrt(np.diag(pcov_sigma))[0],popt_sigma[1],np.sqrt(np.diag(pcov_sigma))[1],popt_sigma[2],np.sqrt(np.diag(pcov_sigma))[2],popt_sigma[3],np.sqrt(np.diag(pcov_sigma))[3],popt_sigma[4],np.sqrt(np.diag(pcov_sigma))[4]))
 kbt=1.38064852e-23
 e=1.602176634e-19
 #print(popt[1])
 #print(popt[4])
-print("E = {:.4g} eV".format(popt[1]*kbt/(e*1/popt[4])))
+print("E = {:.4g} eV".format(popt_sigma[1]*kbt/(e*1/popt_sigma[4])))
 
 # Load Nb-H-Field data
 # t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Nb), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
