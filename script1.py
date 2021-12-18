@@ -155,7 +155,7 @@ print("Debye Temp von Cu Theta_D/K = {:.4g}+\- {:.4g}".format(Theta_D_Cu, Delta_
 # Resistivity is rho= (A/l)*R, Calling constant C = (A/l) = pi*r^2/l
 C = np.pi*(0.08*10**(-3))/1  # Kürtzt sich einfach bei dem Plot 
 R_Theta_D = lin(Theta_D_Cu, m, n)
-rho = [T/Theta_D_Cu, R_P_1/R_Theta_D]
+rho = [T/Theta_D_Cu, R_T/R_Theta_D]
 
 # Literature Values according to Instructions
 Na_T = [0.388, 0.282]    # Reduced Temp
@@ -317,10 +317,22 @@ popt, pcov = curve_fit(lin, x[fit_range2[0]:fit_range2[1]], y[fit_range2[0]:fit_
 popt_sigma_lin = popt.copy()
 pcov_sigma_lin = pcov.copy()
 
+# linear fit
+fit_range3 = [3560, 3625]
+fit_plot_range3 = [3560, 3625]
+
+fit_parameters_Si_lin3 = [["m", "n"],
+                         [-1  ,   1]]     # start values
+
+popt, pcov = curve_fit(lin, x[fit_range3[0]:fit_range3[1]], y[fit_range3[0]:fit_range3[1]], fit_parameters_Si_lin3[1])  
+popt_sigma_lin3 = popt.copy()
+pcov_sigma_lin3 = pcov.copy()
+
 fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 plt.plot(x[plot_range[0]:plot_range[1]], y[plot_range[0]:plot_range[1]],'.', label='Conductance of Si')
 plt.plot(x[fit_plot_range1[0]:fit_plot_range1[1]], func2(x, *popt_sigma)[fit_plot_range1[0]:fit_plot_range1[1]], 'r--', label="Fit")
 plt.plot(x[fit_plot_range2[0]:fit_plot_range2[1]], lin(x, *popt_sigma_lin)[fit_plot_range2[0]:fit_plot_range2[1]], 'y--', label="Linear-Fit")
+plt.plot(x[fit_plot_range3[0]:fit_plot_range3[1]], lin(x, *popt_sigma_lin3)[fit_plot_range3[0]:fit_plot_range3[1]], 'r--', label="Linear-Fit")
 plt.xlabel(r"1/Temperature 1/T / 1/K")
 plt.ylabel(r"Conductance ln($\sigma$)/ln(($\Omega$*m)^-1)")
 plt.legend()
@@ -331,13 +343,30 @@ plt.title(r"$\ln(\sigma)$ of Si over inversed Temperature")
 #plt.savefig('log_sigma_over_rec_temp2_Fit.pdf', bbox_inches='tight')
 plt.show()
 
+
 print("Parameter des Fits:\n")
 print("A= {:.4g} +/- {:.4g}, B= {:.4g} +/- {:.4g}, c= {:.4g} +/- {:.4g}, d= {:.4g} +/- {:.4g}, e= {:.4g} +/- {:.4g}, ".format(popt_sigma[0],np.sqrt(np.diag(pcov_sigma))[0],popt_sigma[1],np.sqrt(np.diag(pcov_sigma))[1],popt_sigma[2],np.sqrt(np.diag(pcov_sigma))[2],popt_sigma[3],np.sqrt(np.diag(pcov_sigma))[3],popt_sigma[4],np.sqrt(np.diag(pcov_sigma))[4]))
-kbt=1.38064852e-23
-e=1.602176634e-19
+kbt=(1.38064852e-23)/(1.6022e-19) # eV/K
+e=1.602176634e-19 
 #print(popt[1])
 #print(popt[4])
 print("E = {:.4g} eV".format(popt_sigma[1]*kbt/(e*1/popt_sigma[4])))
+
+print("Parameter des lin Fits:\n")
+print("m = {:.4g} +/- {:.4g}, n = {:.4g} +/- {:.4g}".format(popt_sigma_lin[0], np.diag(pcov_sigma_lin)[0], popt_sigma_lin[1], np.diag(pcov_sigma_lin)[1]))
+# ln(conduct) = -E_Donor/2kb * 1/T
+# there fore the slope m = -E_Donor/2kb
+# hence E_Donor = -2m*kb
+# hence Delta E_Donor = abs(-2*kb*Delta m)
+print("E_Donor = {:.4g} +/- {:.4g} eV".format(-2*popt_sigma_lin[0]*kbt, np.abs(-2*kbt*np.diag(pcov_sigma_lin)[0])))
+
+
+print("m = {:.4g} +/- {:.4g}, n = {:.4g} +/- {:.4g}".format(popt_sigma_lin3[0], np.diag(pcov_sigma_lin3)[0], popt_sigma_lin3[1], np.diag(pcov_sigma_lin3)[1]))
+# ln(conduct) = -E_Donor/2kb * 1/T
+# there fore the slope m = -E_Donor/2kb
+# hence E_Donor = -2m*kb
+print("E_Donor = {:.4g} eV".format(-2*popt_sigma_lin3[0]*kbt), np.abs(-2*kbt*np.diag(pcov_sigma_lin3)[0]))
+
 
 # Load Nb-H-Field data
 # t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Nb), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
