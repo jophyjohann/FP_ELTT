@@ -1,8 +1,8 @@
-Nb und Si  TT.MM.JJJ  Name 1 und Name 2
-
-26.11.2021 11:04
-Zeit	Temperatur	R_Probe_1	R_Thermometer	R_Probe_2	Void	Void
-Sekunden	Kelvin	Ohm	Ohm	Ohm	Void	Void
+#Nb und Si  TT.MM.JJJ  Name 1 und Name 2
+#
+#26.11.2021 11:04
+#Zeit	Temperatur	R_Probe_1	R_Thermometer	R_Probe_2	Void	Void
+#Sekunden	Kelvin	Ohm	Ohm	Ohm	Void	Void
 0.000000E+0	4.696316E+1	7.170000E-2	6.942680E+0	1.024610E+6
 9.996462E-1	6.148801E+0	7.160000E-2	6.948070E+0	1.024610E+6
 1.999334E+0	6.147330E+0	7.120000E-2	6.948370E+0	1.024610E+6
