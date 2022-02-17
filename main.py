@@ -1,4 +1,5 @@
 from dataset_operations import DataSet_Operations
+from dataset_operations2 import DataSet_Operations
 import importlib
 import glob
 
@@ -7,10 +8,12 @@ class run:
 
 	def __init__(self):
 		self.dat = DataSet_Operations()
+		self.dat2 = DataSet_Operations2()
 
 		self.n_scripts = len(glob.glob("script*.py"))
 		
 		self.dat.insert_dataset_files()
+		self.dat2.insert_dataset_files()
 
 
 	def script_start(self):
