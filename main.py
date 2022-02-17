@@ -1,5 +1,5 @@
 from dataset_operations import DataSet_Operations
-from dataset_operations2 import DataSet_Operations
+from dataset_operations2 import DataSet_Operations2
 import importlib
 import glob
 
@@ -48,6 +48,7 @@ class run:
 	def main(self):
 		self.__init__()
 		self.dat.import_dataset_measurements()
+		self.dat2.import_dataset_measurements()
 
 		self.script_start()
 
