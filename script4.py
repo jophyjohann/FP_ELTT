@@ -26,11 +26,10 @@ class run:
 		def logistic(x, a, b, c, d):
 			return a / np.sqrt(1 + np.exp(b * (x + c))) + d
 
-		def B_func(T, Tc, Xi0):
-			phi0 = 2.07e-15
-			return (1 - (T / Tc)) * phi0 / (2 * np.pi * Xi0**2)
-			
-
+		def B_func(T, Tc, xi0):
+			phi0 = 2.067833848e-15
+			return (1 - (T / Tc)) * phi0 / (2 * np.pi * xi0**2)
+		
 		def offset(x, b):
 			x = [b for i in x]
 			return x
@@ -461,16 +460,18 @@ class run:
 
 		T_data = [popt0[2],popt1[2],popt2[2],popt3[2],popt4[2],popt5[2],popt6[2]]
 		T_data = [-i for i in T_data]
-		I_data = [0, 1, 2, 3, 4, 5, 6]
+		I_data = [2, 3, 4, 5, 6, 7, 8]
 		B_data = [i * 194/6 for i in I_data]	# 6A entspricht 194mT
 		
 		fit_parameters = [["Tc","Xi0"],
-										  [ 12,    1],		 # max bounds
-										  [ 8.8, 20e-9],		 # start values
-										  [ 4,    0]]		 # min bounds
+										  [8.9,  0.55e-9],		 # max bounds
+										  [8.8,  0.50e-9],		 # start values
+										  [8.7,  0.45e-9]]		 # min bounds
 		
-		popt, pcov = curve_fit(B_func, T_data[fit_range[0]:fit_range[1]], B_data[fit_range[0]:fit_range[1]], fit_parameters[2], bounds=(fit_parameters[3],fit_parameters[1]))  
-		
+		popt, pcov = curve_fit(B_func, T_data[fit_range[0]:fit_range[1]][:3], B_data[fit_range[0]:fit_range[1]][:3], fit_parameters[2])#, bounds=(fit_parameters[3],fit_parameters[1]))  
+
+		l = 1e9*popt[1] / 39
+		print("Somit ergibt sich für die mittlere freihe Weglänge l={:.4}nm".format(l))
 		
 		fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 		plt.plot(T_data, B_data, '.')
