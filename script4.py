@@ -30,7 +30,7 @@ class run:
 
 		data = dataSet[1]
 			
-		plot_lims = [[700,950],
+		plot_lims = [[705,950],
 								[1100,1450],
 								[1450,1850],
 								[1850,2700],
@@ -102,6 +102,7 @@ class run:
 		print("a = {:.4g} +\- {:.4g}\nb= {:.4g} +\- {:.4g}\nc= {:.4g} +\- {:.4g}\nd= {:.4g} +\- {:.4g}".format(popt[0], np.sqrt(np.diag(pcov))[0], popt[1], np.sqrt(np.diag(pcov))[1], popt[2], np.sqrt(np.diag(pcov))[2], popt[3], np.sqrt(np.diag(pcov))[3]))
 		
 		fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
+		#plt.plot(t_data, R_data, '.')
 		plt.plot(T_data, R_data, '.')
 		plt.plot(T_data[fit_range[0]:fit_range[1]], logistic(T_data[fit_range[0]:fit_range[1]], *popt), '-', label = r"Logistic func. fit")
 		plt.xlabel("T / K")
@@ -381,4 +382,18 @@ class run:
 		plt.show()
 
 
+			
+		print(80*"_"+"\n\nPlotting: Phasendiagramm Niob")
+
+		Tc_data = [popt0[2],popt1[2],popt2[2],popt3[2],popt4[2],popt5[2],popt6[2]]
+		Tc_data = [-i for i in Tc_data]
+		I_data = [0, 1, 2, 3, 4, 5, 6]
+		B_data = [i * 194/6 for i in I_data]	# 6A entspricht 194mT
 		
+		fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
+		plt.plot(Tc_data, B_data, '.')
+		plt.xlabel(r"$T_C$ / K")
+		plt.ylabel("B / mT")
+		plt.title("Phasendiagramm Niob")
+		maximize()
+		plt.show()
