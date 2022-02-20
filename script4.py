@@ -25,8 +25,60 @@ class run:
 		
 		def logistic(x, a, b, c, d):
 			return a / np.sqrt(1 + np.exp(b * (x + c))) + d
+
+		def offset(x, b):
+			x = [b for i in x]
+			return x
 		
-		### Plot
+			
+		### Plot für RestWiderstand
+		data = dataSet[0]
+		
+		plot_range = [1650, None]
+		fit_range = [46, None]
+		fit_plot_range = [46, None]
+		
+		# set plot characteristics of x and y ticks and grid
+		major_x_ticks = 2
+		minor_x_ticks = 1
+		major_y_ticks = 0.002
+		minor_y_ticks = 0.0004
+		major_alpha = 0.7
+		minor_alpha = 0.2
+		
+		T_data = data['T'][plot_range[0]:plot_range[1]]
+		t_data = data['t'][plot_range[0]:plot_range[1]]
+		R_data = data['R_P_1'][plot_range[0]:plot_range[1]]
+			
+		fit_parameters = [["b"],
+										  [ 0.1],		 # max bounds
+										  [0.015],		 # start values
+										  [0]]		 # min bounds
+		
+		popt, pcov = curve_fit(offset, T_data[fit_range[0]:fit_range[1]], R_data[fit_range[0]:fit_range[1]], fit_parameters[2])#, bounds=(fit_parameters[3],fit_parameters[1]))  
+			
+		fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
+		#plt.plot(t_data, T_data, '.')
+		plt.plot(T_data, R_data, '.')
+		plt.plot(T_data[fit_plot_range[0]:fit_plot_range[1]], offset(T_data[fit_plot_range[0]:fit_plot_range[1]], *popt), '--', label = "Restwiderstand $R_R$={:.4}$\Omega$".format(popt[0]))
+		plt.xlabel("T / K")
+		plt.ylabel(r"R / $\Omega$")
+		#plt.xlim(0,None)
+		#plt.ylim(0,None)
+		fig.set_xticks(np.arange(plt.xlim()[0],plt.xlim()[1],major_x_ticks))
+		fig.set_xticks(np.arange(plt.xlim()[0],plt.xlim()[1],minor_x_ticks),minor=True)
+		fig.set_yticks(np.arange(plt.ylim()[0],plt.ylim()[1],major_y_ticks))
+		fig.set_yticks(np.arange(plt.ylim()[0],plt.ylim()[1],minor_y_ticks),minor=True)
+		fig.grid(which='minor', alpha=minor_alpha)
+		fig.grid(which='major', alpha=major_alpha)
+		plt.title("RestWiderstand")
+		plt.legend()
+		maximize()
+		plt.show()
+
+
+			
+		### Plot für Phasendiagramm
 
 		data = dataSet[1]
 			
@@ -50,20 +102,29 @@ class run:
 		t_data = data['t']#[plot_lims[0][0]:plot_lims[0][1]]
 		R_data = data['R_P_1']#[plot_lims[0][0]:plot_lims[0][1]]
 		
-		fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
-		plt.plot(t_data, R_data, '-')
+		#fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
+		
+		fig, ax1 = plt.subplots()
+		ax1.plot(t_data, R_data, '-')
+		ax1.set_ylabel(r"R / $\Omega$",color="tab:blue")
+		ax1.set_xlabel("t / s")
+		ax1.tick_params(axis='y', labelcolor="tab:blue")
+		
+		ax2 = ax1.twinx()
+		ax2.plot(t_data, T_data, 'k-')
+		ax2.set_ylabel("T / K")
+		
 		#plt.plot(t_data, R_data, '-')
-		plt.xlabel("T / K")
-		plt.ylabel(r"R / $\Omega$")
 		#plt.xlim(0,None)
-		plt.ylim(0,None)
-		fig.set_xticks(np.arange(plt.xlim()[0],plt.xlim()[1],major_x_ticks))
-		fig.set_xticks(np.arange(plt.xlim()[0],plt.xlim()[1],minor_x_ticks),minor=True)
+		#plt.ylim(0,None)
+		#fig.set_xticks(np.arange(plt.xlim()[0],plt.xlim()[1],major_x_ticks))
+		#fig.set_xticks(np.arange(plt.xlim()[0],plt.xlim()[1],minor_x_ticks),minor=True)
 		#fig.set_yticks(np.arange(plt.ylim()[0],plt.ylim()[1],major_y_ticks))
 		#fig.set_yticks(np.arange(plt.ylim()[0],plt.ylim()[1],minor_y_ticks),minor=True)
-		fig.grid(which='minor', alpha=minor_alpha)
-		fig.grid(which='major', alpha=major_alpha)
+		#fig.grid(which='minor', alpha=minor_alpha)
+		#fig.grid(which='major', alpha=major_alpha)
 		maximize()
+		fig.tight_layout()
 		plt.show()
 
 
@@ -393,7 +454,7 @@ class run:
 		fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 		plt.plot(Tc_data, B_data, '.')
 		plt.xlabel(r"$T_C$ / K")
-		plt.ylabel("B / mT")
+		plt.ylabel(r"$B_C$ / mT")
 		plt.title("Phasendiagramm Niob")
 		maximize()
 		plt.show()
