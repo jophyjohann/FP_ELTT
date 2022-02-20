@@ -60,7 +60,7 @@ class run:
 		fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 		#plt.plot(t_data, T_data, '.')
 		plt.plot(T_data, R_data, '.')
-		plt.plot(T_data[fit_plot_range[0]:fit_plot_range[1]], offset(T_data[fit_plot_range[0]:fit_plot_range[1]], *popt), '--', label = "Restwiderstand $R_R$={:.4}$\Omega$".format(popt[0]))
+		plt.plot(T_data[fit_plot_range[0]:fit_plot_range[1]], offset(T_data[fit_plot_range[0]:fit_plot_range[1]], *popt), '--', label = "Restwiderstand $R_R$=({:.4}$\pm${:.4})$\Omega$".format(popt[0],np.sqrt(np.diag(pcov))[0]))
 		plt.xlabel("T / K")
 		plt.ylabel(r"R / $\Omega$")
 		#plt.xlim(0,None)
