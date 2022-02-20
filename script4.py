@@ -482,7 +482,7 @@ class run:
 		fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 		plt.plot(T_data, B_data, '.')
 		T_data = np.linspace(T_data[fit_plot_range[0]:fit_plot_range[1]][0],T_data[fit_plot_range[0]:fit_plot_range[1]][-1],1000)
-		plt.plot(T_data, lin(T_data, *popt), '-', label = r"Lin. Fit $y=S*x+Tc$ mit S=({:.4}$\pm${:.3})T/K".format(popt[1],np.sqrt(np.diag(pcov))[1]))
+		plt.plot(T_data, lin(T_data, *popt), '-', label = r"Lin. Fit $y=S*x+a$ mit S=({:.4}$\pm${:.3})mT/K".format(popt[1],np.sqrt(np.diag(pcov))[1]))
 		plt.xlabel(r"$T_C$ / K")
 		plt.ylabel(r"$B_C$ / mT")
 		plt.title("Phasendiagramm Niob")
