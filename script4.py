@@ -26,9 +26,9 @@ class run:
 		def logistic(x, a, b, c, d):
 			return a / np.sqrt(1 + np.exp(b * (x + c))) + d
 
-		def B_func(T, Tc, xi0):
-			phi0 = 2.067833848e-15
-			return (1 - (T / Tc)) * phi0 / (2 * np.pi * xi0**2)
+		def lin(x, a, S):
+			#return (1 - (T / Tc)) * phi0 / (2 * np.pi * xi0**2)
+			return S * x + a
 		
 		def offset(x, b):
 			x = [b for i in x]
@@ -456,27 +456,33 @@ class run:
 		print(80*"_"+"\n\nPlotting: Phasendiagramm Niob")
 		
 		# fitting the function
-		fit_range = [None, None]
-
+		fit_range = [None, 3]
+		fit_plot_range = [None, None]
+		
 		T_data = [popt0[2],popt1[2],popt2[2],popt3[2],popt4[2],popt5[2],popt6[2]]
 		T_data = [-i for i in T_data]
 		I_data = [2, 3, 4, 5, 6, 7, 8]
 		B_data = [i * 194/6 for i in I_data]	# 6A entspricht 194mT
 		
-		fit_parameters = [["Tc","Xi0"],
-										  [8.9,  0.55e-9],		 # max bounds
-										  [8.8,  0.50e-9],		 # start values
-										  [8.7,  0.45e-9]]		 # min bounds
-		
-		popt, pcov = curve_fit(B_func, T_data[fit_range[0]:fit_range[1]][:3], B_data[fit_range[0]:fit_range[1]][:3], fit_parameters[2])#, bounds=(fit_parameters[3],fit_parameters[1]))  
-
-		l = 1e9*popt[1] / 39
-		print("Somit ergibt sich für die mittlere freihe Weglänge l={:.4}nm".format(l))
+		fit_parameters = [["a" , "S"],
+										  [2500,  -100],		 # max bounds
+										  [ 900,  -200],		 # start values
+										  [ 500, -1000]]		 # min bounds
+		popt, pcov = curve_fit(lin, T_data[fit_range[0]:fit_range[1]], B_data[fit_range[0]:fit_range[1]], fit_parameters[2], bounds=(fit_parameters[3],fit_parameters[1]))  
+			
+		print(popt, pcov)
+		phi0 = 2.067833848e-15
+		Tc = 9.37
+		S = 1e-3*popt[1]
+		xi0 = np.sqrt(-phi0/(2 * np.pi * S * Tc))
+		l = xi0**2 / 39e-9
+		print("Kohärenzlänge xi0={:.4}nm".format(1e9*xi0))
+		print("mittlere freie Weglänge l={:.4}nm".format(1e9*l))
 		
 		fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 		plt.plot(T_data, B_data, '.')
-		T_data = np.linspace(T_data[0],T_data[-1],1000)
-		plt.plot(T_data[fit_range[0]:fit_range[1]], B_func(T_data[fit_range[0]:fit_range[1]], *popt), '-', label = r"Lin. Fit mit $\xi^0$=({:.3}$\pm${:.3})nm".format(1e9*popt[1],1e9*np.sqrt(np.diag(pcov))[1])+"\n"+r"und $T_C$=({:.3}$\pm${:.3})K".format(popt[0],np.sqrt(np.diag(pcov))[0]))
+		T_data = np.linspace(T_data[fit_plot_range[0]:fit_plot_range[1]][0],T_data[fit_plot_range[0]:fit_plot_range[1]][-1],1000)
+		plt.plot(T_data, lin(T_data, *popt), '-', label = r"Lin. Fit $y=S*x+Tc$ mit S=({:.4}$\pm${:.3})T/K".format(popt[1],np.sqrt(np.diag(pcov))[1]))
 		plt.xlabel(r"$T_C$ / K")
 		plt.ylabel(r"$B_C$ / mT")
 		plt.title("Phasendiagramm Niob")
