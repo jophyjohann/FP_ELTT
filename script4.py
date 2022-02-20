@@ -26,11 +26,18 @@ class run:
 		def logistic(x, a, b, c, d):
 			return a / np.sqrt(1 + np.exp(b * (x + c))) + d
 
+		def B_func(T, Tc, Xi0):
+			phi0 = 2.07e-15
+			return (1 - (T / Tc)) * phi0 / (2 * np.pi * Xi0**2)
+			
+
 		def offset(x, b):
 			x = [b for i in x]
 			return x
 		
 			
+		print(80*"_"+"\n\nPlotting: RestWiderstand Niob")
+		
 		### Plot für RestWiderstand
 		data = dataSet[0]
 		
@@ -63,8 +70,6 @@ class run:
 		plt.plot(T_data[fit_plot_range[0]:fit_plot_range[1]], offset(T_data[fit_plot_range[0]:fit_plot_range[1]], *popt), '--', label = "Restwiderstand $R_R$=({:.4}$\pm${:.4})$\Omega$".format(popt[0],np.sqrt(np.diag(pcov))[0]))
 		plt.xlabel("T / K")
 		plt.ylabel(r"R / $\Omega$")
-		#plt.xlim(0,None)
-		#plt.ylim(0,None)
 		fig.set_xticks(np.arange(plt.xlim()[0],plt.xlim()[1],major_x_ticks))
 		fig.set_xticks(np.arange(plt.xlim()[0],plt.xlim()[1],minor_x_ticks),minor=True)
 		fig.set_yticks(np.arange(plt.ylim()[0],plt.ylim()[1],major_y_ticks))
@@ -101,8 +106,6 @@ class run:
 		T_data = data['T']#[plot_lims[0][0]:plot_lims[0][1]]
 		t_data = data['t']#[plot_lims[0][0]:plot_lims[0][1]]
 		R_data = data['R_P_1']#[plot_lims[0][0]:plot_lims[0][1]]
-		
-		#fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 		
 		fig, ax1 = plt.subplots()
 		ax1.plot(t_data, R_data, '-')
@@ -165,6 +168,7 @@ class run:
 		fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 		#plt.plot(t_data, R_data, '.')
 		plt.plot(T_data, R_data, '.')
+		T_data = np.linspace(T_data[0],T_data[-1],1000)
 		plt.plot(T_data[fit_range[0]:fit_range[1]], logistic(T_data[fit_range[0]:fit_range[1]], *popt), '-', label = r"Logistic func. fit")
 		plt.xlabel("T / K")
 		plt.ylabel(r"R / $\Omega$")
@@ -210,6 +214,7 @@ class run:
 		fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 		#plt.plot(t_data, T_data, '.')
 		plt.plot(T_data, R_data, '.')
+		T_data = np.linspace(T_data[0],T_data[-1],1000)
 		plt.plot(T_data[fit_range[0]:fit_range[1]], logistic(T_data[fit_range[0]:fit_range[1]], *popt), '-', label = r"Logistic func. fit")
 		plt.xlabel("T / K")
 		plt.ylabel(r"R / $\Omega$")
@@ -255,6 +260,7 @@ class run:
 		fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 		#plt.plot(t_data, T_data, '.')
 		plt.plot(T_data, R_data, '.')
+		T_data = np.linspace(T_data[0],T_data[-1],1000)
 		plt.plot(T_data[fit_range[0]:fit_range[1]], logistic(T_data[fit_range[0]:fit_range[1]], *popt), '-', label = r"Logistic func. fit")
 		plt.xlabel("T / K")
 		plt.ylabel(r"R / $\Omega$")
@@ -300,6 +306,7 @@ class run:
 		fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 		#plt.plot(t_data, R_data, '.')
 		plt.plot(T_data, R_data, '.')
+		T_data = np.linspace(T_data[0],T_data[-1],1000)
 		plt.plot(T_data[fit_range[0]:fit_range[1]], logistic(T_data[fit_range[0]:fit_range[1]], *popt), '-', label = r"Logistic func. fit")
 		plt.xlabel("T / K")
 		plt.ylabel(r"R / $\Omega$")
@@ -345,6 +352,7 @@ class run:
 		fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 		#plt.plot(t_data, T_data, '.')
 		plt.plot(T_data, R_data, '.')
+		T_data = np.linspace(T_data[0],T_data[-1],1000)
 		plt.plot(T_data[fit_range[0]:fit_range[1]], logistic(T_data[fit_range[0]:fit_range[1]], *popt), '-', label = r"Logistic func. fit")
 		plt.xlabel("T / K")
 		plt.ylabel(r"R / $\Omega$")
@@ -390,6 +398,7 @@ class run:
 		fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 		#plt.plot(t_data, R_data, '.')
 		plt.plot(T_data, R_data, '.')
+		T_data = np.linspace(T_data[0],T_data[-1],1000)
 		plt.plot(T_data[fit_range[0]:fit_range[1]], logistic(T_data[fit_range[0]:fit_range[1]], *popt), '-', label = r"Logistic func. fit")
 		plt.xlabel("T / K")
 		plt.ylabel(r"R / $\Omega$")
@@ -435,6 +444,7 @@ class run:
 		fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
 		#plt.plot(t_data, T_data, '.')
 		plt.plot(T_data, R_data, '.')
+		T_data = np.linspace(T_data[0],T_data[-1],1000)
 		plt.plot(T_data[fit_range[0]:fit_range[1]], logistic(T_data[fit_range[0]:fit_range[1]], *popt), '-', label = r"Logistic func. fit")
 		plt.xlabel("T / K")
 		plt.ylabel(r"R / $\Omega$")
@@ -445,16 +455,30 @@ class run:
 
 			
 		print(80*"_"+"\n\nPlotting: Phasendiagramm Niob")
+		
+		# fitting the function
+		fit_range = [None, None]
 
-		Tc_data = [popt0[2],popt1[2],popt2[2],popt3[2],popt4[2],popt5[2],popt6[2]]
-		Tc_data = [-i for i in Tc_data]
+		T_data = [popt0[2],popt1[2],popt2[2],popt3[2],popt4[2],popt5[2],popt6[2]]
+		T_data = [-i for i in T_data]
 		I_data = [0, 1, 2, 3, 4, 5, 6]
 		B_data = [i * 194/6 for i in I_data]	# 6A entspricht 194mT
 		
+		fit_parameters = [["Tc","Xi0"],
+										  [ 12,    1],		 # max bounds
+										  [ 8.8, 20e-9],		 # start values
+										  [ 4,    0]]		 # min bounds
+		
+		popt, pcov = curve_fit(B_func, T_data[fit_range[0]:fit_range[1]], B_data[fit_range[0]:fit_range[1]], fit_parameters[2], bounds=(fit_parameters[3],fit_parameters[1]))  
+		
+		
 		fig = plt.figure(figsize=(8, 4), dpi=120).add_subplot(1, 1, 1)
-		plt.plot(Tc_data, B_data, '.')
+		plt.plot(T_data, B_data, '.')
+		T_data = np.linspace(T_data[0],T_data[-1],1000)
+		plt.plot(T_data[fit_range[0]:fit_range[1]], B_func(T_data[fit_range[0]:fit_range[1]], *popt), '-', label = r"Lin. Fit mit $\xi^0$=({:.3}$\pm${:.3})nm".format(1e9*popt[1],1e9*np.sqrt(np.diag(pcov))[1])+"\n"+r"und $T_C$=({:.3}$\pm${:.3})K".format(popt[0],np.sqrt(np.diag(pcov))[0]))
 		plt.xlabel(r"$T_C$ / K")
 		plt.ylabel(r"$B_C$ / mT")
 		plt.title("Phasendiagramm Niob")
+		plt.legend()
 		maximize()
 		plt.show()
