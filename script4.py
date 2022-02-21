@@ -461,7 +461,7 @@ class run:
 		
 		T_data = [popt0[2],popt1[2],popt2[2],popt3[2],popt4[2],popt5[2],popt6[2]]
 		T_data = [-i for i in T_data]
-		I_data = [2, 3, 4, 5, 6, 7, 8]
+		I_data = [0, 1, 2, 3, 4, 5, 6]
 		B_data = [i * 194/6 for i in I_data]	# 6A entspricht 194mT
 		
 		fit_parameters = [["a" , "S"],
@@ -472,7 +472,7 @@ class run:
 			
 		print(popt, pcov)
 		phi0 = 2.067833848e-15
-		Tc = 9.37
+		Tc = 8.8
 		S = 1e-3*popt[1]
 		xi0 = np.sqrt(-phi0/(2 * np.pi * S * Tc))
 		l = xi0**2 / 39e-9
