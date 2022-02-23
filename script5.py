@@ -255,11 +255,11 @@ class run:
 		plot_range = [1200, None]
 		fit_range = [None, None]
 		
-		fit_range_os_l = [None, 75]
+		fit_range_os_l = [-65, None]
 		fit_plot_range_os_l = [None, None]
 		#fit_plot_range_os_l = fit_range_os_l
 		
-		fit_range_os_r = [95, None]
+		fit_range_os_r = [None, -80]
 		fit_plot_range_os_r = [None, None]
 		#fit_plot_range_os_r = fit_range_os_r
 			
