@@ -11,8 +11,8 @@ class DataSet_Operations:
 
 		#automatically inserted dataset_files:
 		self.dataset_files = ["Heinzelmann_Vincent_Cu-Si.dat",
-										 "Heinzelmann_Vincent_Nb_H-Feld.dat",
 										 "Heinzelmann_Vincent_Nb-Si.dat",
+										 "Heinzelmann_Vincent_Nb_H-Feld.dat",
 										 ]
 		#end of automatically inserted dataset_files
 
