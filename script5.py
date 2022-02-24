@@ -13,6 +13,7 @@ class run:
 		self.export_extension = ".png"
 		self.dpi = 200
 		self.figsize = (6.5, 4.5)
+		self.markersize = 10
 
 
 	def main(self):
@@ -37,6 +38,18 @@ class run:
 			return x
 
 		plt.rcParams['font.size'] = '15'
+		#'''
+		plt.rcParams['axes.edgecolor'] = 'w'
+		plt.rcParams['axes.labelcolor'] = 'w'
+		plt.rcParams['figure.edgecolor'] = 'w'
+		plt.rcParams['legend.edgecolor'] = 'w'
+		plt.rcParams['text.color'] = 'w'
+		plt.rcParams['legend.facecolor'] = 'none'
+		plt.rcParams['xtick.color'] = 'w'
+		plt.rcParams['ytick.color'] = 'w'
+		
+		plt.rcParams['savefig.transparent'] = 'True'
+		#'''
 		
 		print(80*"_"+"\n\nSupraleitung Auswertung2 eigene Messdaten")
 
@@ -193,12 +206,12 @@ class run:
 		R_90p_B_0 = R_90p
 			
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
-		plt.plot(T_data, R_data, '.')
+		plt.plot(T_data, R_data, '.', color = "deepskyblue", markersize=self.markersize)
 		T_data = np.linspace(T_data[0],T_data[-1],1000)
-		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l), '--')
-		plt.plot(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], offset(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], *popt_os_r), '--')
-		plt.plot(Tc_10p, R_10p, 'o')
-		plt.plot(Tc_90p, R_90p, 'o')
+		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l), 'w--', markersize=self.markersize)
+		plt.plot(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], offset(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], *popt_os_r), 'w--', markersize=self.markersize)
+		plt.plot(Tc_10p, R_10p, 'w+', markersize=20)
+		plt.plot(Tc_90p, R_90p, 'w+', markersize=20)
 		plt.xlabel("T / K")
 		plt.ylabel(r"R / $\Omega$")
 		#plt.title("Tc Plot für I = 0A")
@@ -254,12 +267,12 @@ class run:
 		R_90p_B_1 = R_90p
 		
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
-		plt.plot(T_data, R_data, '.')
+		plt.plot(T_data, R_data, '.', color="tab:green", markersize=self.markersize)
 		T_data = np.linspace(T_data[0],T_data[-1],1000)
-		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l), '--')
-		plt.plot(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], offset(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], *popt_os_r), '--')
-		plt.plot(Tc_10p, R_10p, 'o')
-		plt.plot(Tc_90p, R_90p, 'o')
+		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l), 'w--', markersize=self.markersize)
+		plt.plot(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], offset(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], *popt_os_r), 'w--', markersize=self.markersize)
+		plt.plot(Tc_10p, R_10p, 'w+', markersize=20)
+		plt.plot(Tc_90p, R_90p, 'w+', markersize=20)
 		plt.xlabel("T / K")
 		plt.ylabel(r"R / $\Omega$")
 		#plt.title("Tc Plot für I = 0A")
@@ -318,12 +331,12 @@ class run:
 		R_90p_B_2 = R_90p
 		
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
-		plt.plot(T_data, R_data, '.')
+		plt.plot(T_data, R_data, '.', color="tab:orange", markersize=self.markersize)
 		T_data = np.linspace(T_data[0],T_data[-1],1000)
-		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l), '--')
-		plt.plot(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], offset(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], *popt_os_r), '--')
-		plt.plot(Tc_10p, R_10p, 'o')
-		plt.plot(Tc_90p, R_90p, 'o')
+		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l), 'w--', markersize=self.markersize)
+		plt.plot(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], offset(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], *popt_os_r), 'w--', markersize=self.markersize)
+		plt.plot(Tc_10p, R_10p, 'w+', markersize=20)
+		plt.plot(Tc_90p, R_90p, 'w+', markersize=20)
 		plt.xlabel("T / K")
 		plt.ylabel(r"R / $\Omega$")
 		#plt.title("Tc Plot für I = 0A")
@@ -337,15 +350,15 @@ class run:
 
 		
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
-		plt.plot(T_data_B_0, R_data_B_0, '.', label = r"$\mu_0$H=0")
-		plt.plot(T_data_B_2, R_data_B_2, '.', label = r"$\mu_0$H=129mT")
-		plt.plot(T_data_B_1, R_data_B_1, '.', label = r"$\mu_0$H=259mT")
+		plt.plot(T_data_B_0, R_data_B_0, '.', color = "deepskyblue", markersize=self.markersize, label = r"$\mu_0$H=0")
+		plt.plot(T_data_B_2, R_data_B_2, '.', color = "tab:orange", markersize=self.markersize, label = r"$\mu_0$H=129mT")
+		plt.plot(T_data_B_1, R_data_B_1, '.', color = "tab:green", markersize=self.markersize, label = r"$\mu_0$H=259mT")
 		plt.xlabel("T / K")
 		plt.ylabel(r"R / $\Omega$")
 		plt.xlim(5, None)
 		#plt.title("Tc Plot für I = 0A")
 		#plt.legend(loc='lower right')
-		plt.legend(loc='upper left')
+		plt.legend(loc='upper left', markerscale=2)
 		maximize()
 		plt.savefig(self.export_folder+"Tc_plot_all"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
@@ -394,18 +407,20 @@ class run:
 		print("oberes krit. Magnetfeld Bc2={:.4}T".format(B_c2))
 		
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
-		plt.plot(T_data_10p, B_data, 'o')
-		plt.plot(T_data_90p, B_data, 'o')
+		plt.plot(T_data_10p, B_data, 'o', color = "deepskyblue")
+		plt.plot(T_data_90p, B_data, 'o', color = "tab:orange")
 		T_data_10p = np.linspace(T_data_10p[fit_plot_range[0]:fit_plot_range[1]][0],T_data_10p[fit_plot_range[0]:fit_plot_range[1]][-1],1000)
 		T_data_90p = np.linspace(T_data_90p[fit_plot_range[0]:fit_plot_range[1]][0],T_data_90p[fit_plot_range[0]:fit_plot_range[1]][-1],1000)
-		plt.plot(T_data_10p, lin(T_data_10p, *popt_10p), '--', color= "tab:blue", label = r"Lin. Fit: $y=S\cdot x+a$"+"\n"+r"S=({:.4}$\pm${:.3})mT/K".format(popt_10p[1],np.sqrt(np.diag(pcov_10p))[1]))
-		plt.plot(T_data_90p, lin(T_data_90p, *popt_90p), '--', color= "tab:orange", label = r"Lin. Fit: $y=S\cdot x+a$"+"\n"+r"S=({:.4}$\pm${:.3})mT/K".format(popt_90p[1],np.sqrt(np.diag(pcov_90p))[1]))
+		plt.plot(T_data_10p, lin(T_data_10p, *popt_10p), '--', markersize=self.markersize, color= "deepskyblue", label = r"Lin. Fit: $y=S\cdot x+a$"+"\n"+r"S=({:.4}$\pm${:.3})mT/K".format(popt_10p[1],np.sqrt(np.diag(pcov_10p))[1]))
+		plt.plot(T_data_90p, lin(T_data_90p, *popt_90p), '--', markersize=self.markersize, color= "tab:orange", label = r"Lin. Fit: $y=S\cdot x+a$"+"\n"+r"S=({:.4}$\pm${:.3})mT/K".format(popt_90p[1],np.sqrt(np.diag(pcov_90p))[1]))
 		plt.xlabel(r"$T_C$ / K")
 		plt.ylabel(r"$B_C$ / mT")
-		plt.xlim(None,10)
+		plt.xlim(None,10.5)
 		plt.ylim(0,None)
 		#plt.title("Phasendiagramm Niob")
-		plt.legend(loc='upper right')
+		leg = plt.legend(loc='upper right')
+		#leg.get_frame().set_edgecolor('w')
+		#leg.get_frame().set_facecolor('none')
 		maximize()
 		plt.savefig(self.export_folder+"phasen_diagramm"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
