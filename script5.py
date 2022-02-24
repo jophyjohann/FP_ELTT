@@ -36,8 +36,8 @@ class run:
 		
 		print(80*"_"+"\n\nSupraleitung Auswertung2 eigene Messdaten")
 
-		
-		print(80*"_"+"\n\nPlotting: Tc Plot für I = 0A")
+		'''
+		print(80*"_"+"\n\nPlotting: Tc Plot für B = 0 (0)")
 
 		# fitting the function
 		plot_range = [-440, -390]
@@ -90,7 +90,7 @@ class run:
 
 
 			
-		print(80*"_"+"\n\nPlotting: Tc Plot für I = 1A")
+		print(80*"_"+"\n\nPlotting: Tc Plot für B = 0 (2)")
 
 		# fitting the function
 		plot_range = [240, 600]
@@ -140,10 +140,10 @@ class run:
 		#plt.title("Tc Plot für I = 0A")
 		maximize()
 		plt.show()
-
+		'''
 
 			
-		print(80*"_"+"\n\nPlotting: Tc Plot für I = 2A")
+		print(80*"_"+"\n\nPlotting: Tc Plot für B = 0")
 
 		# fitting the function
 		plot_range = [670, 770]
@@ -180,7 +180,10 @@ class run:
 		R_90p = search_points[np.abs(search_points-R_p_90p).argmin()]
 		Tc_90p = min(T_data[np.where(R_data==R_90p)])
 		print("Tc @ 90% = ",Tc_90p)
-		
+
+		T_data_B_0 = T_data
+		R_data_B_0 = R_data
+			
 		fig = plt.figure(figsize=(8, 4), dpi=160).add_subplot(1, 1, 1)
 		plt.plot(T_data, R_data, '.')
 		T_data = np.linspace(T_data[0],T_data[-1],1000)
@@ -196,7 +199,7 @@ class run:
 
 
 			
-		print(80*"_"+"\n\nPlotting: Tc Plot für I = 3A")
+		print(80*"_"+"\n\nPlotting: Tc Plot für B = 259mT @ I = 8A")
 
 		# fitting the function
 		plot_range = [970, 1100]
@@ -234,6 +237,9 @@ class run:
 		Tc_90p = min(T_data[np.where(R_data==R_90p)])
 		print("Tc @ 90% = ",Tc_90p)
 		
+		T_data_B_1 = T_data
+		R_data_B_1 = R_data
+		
 		fig = plt.figure(figsize=(8, 4), dpi=160).add_subplot(1, 1, 1)
 		plt.plot(T_data, R_data, '.')
 		T_data = np.linspace(T_data[0],T_data[-1],1000)
@@ -249,17 +255,20 @@ class run:
 
 
 
-		print(80*"_"+"\n\nPlotting: Tc Plot für I = 4A")
+		print(80*"_"+"\n\nPlotting: Tc Plot für B = 129mT @ I = 4A")
 
 		# fitting the function
-		plot_range = [1200, None]
+		#plot_range = [1200, None]
+		plot_range = [1240, -30]
 		fit_range = [None, None]
 		
-		fit_range_os_l = [-65, None]
+		#fit_range_os_l = [-65, None]
+		fit_range_os_l = [-38, None]
 		fit_plot_range_os_l = [None, None]
 		#fit_plot_range_os_l = fit_range_os_l
 		
-		fit_range_os_r = [None, -80]
+		#fit_range_os_r = [None, -80]
+		fit_range_os_r = [None, -47]
 		fit_plot_range_os_r = [None, None]
 		#fit_plot_range_os_r = fit_range_os_r
 			
@@ -287,6 +296,9 @@ class run:
 		Tc_90p = min(T_data[np.where(R_data==R_90p)])
 		print("Tc @ 90% = ",Tc_90p)
 		
+		T_data_B_2 = T_data
+		R_data_B_2 = R_data
+		
 		fig = plt.figure(figsize=(8, 4), dpi=160).add_subplot(1, 1, 1)
 		plt.plot(T_data, R_data, '.')
 		T_data = np.linspace(T_data[0],T_data[-1],1000)
@@ -299,3 +311,20 @@ class run:
 		#plt.title("Tc Plot für I = 0A")
 		maximize()
 		plt.show()
+
+
+
+		print(80*"_"+"\n\nPlotting: Tc Plot (alle)")
+
+		
+		fig = plt.figure(figsize=(8, 4), dpi=160).add_subplot(1, 1, 1)
+		plt.plot(T_data_B_0, R_data_B_0, '.', label = r"$\mu_0$H=0")
+		plt.plot(T_data_B_2, R_data_B_2, '.', label = r"$\mu_0$H=129mT")
+		plt.plot(T_data_B_1, R_data_B_1, '.', label = r"$\mu_0$H=259mT")
+		plt.xlabel("T / K")
+		plt.ylabel(r"R / $\Omega$")
+		#plt.title("Tc Plot für I = 0A")
+		plt.legend()
+		maximize()
+		plt.show()
+
