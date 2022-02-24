@@ -10,7 +10,9 @@ class run:
 		self.dat.import_dataset_measurements()
 
 		self.export_folder = "export/script" + __name__[-1] + "/"
-		self.export_extension = ".pdf"
+		self.export_extension = ".png"
+		self.dpi = 200
+		self.figsize = (6.5, 4.5)
 
 
 	def main(self):
@@ -33,6 +35,8 @@ class run:
 		def offset(x, b):
 			x = [b for i in x]
 			return x
+
+		plt.rcParams['font.size'] = '15'
 		
 		print(80*"_"+"\n\nSupraleitung Auswertung2 eigene Messdaten")
 
@@ -183,8 +187,12 @@ class run:
 
 		T_data_B_0 = T_data
 		R_data_B_0 = R_data
+		Tc_10p_B_0 = Tc_10p
+		Tc_90p_B_0 = Tc_90p
+		R_10p_B_0 = R_10p
+		R_90p_B_0 = R_90p
 			
-		fig = plt.figure(figsize=(8, 4), dpi=160).add_subplot(1, 1, 1)
+		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T_data, R_data, '.')
 		T_data = np.linspace(T_data[0],T_data[-1],1000)
 		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l), '--')
@@ -195,7 +203,8 @@ class run:
 		plt.ylabel(r"R / $\Omega$")
 		#plt.title("Tc Plot für I = 0A")
 		maximize()
-		plt.show()
+		plt.savefig(self.export_folder+"Tc_plot_B0"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
+		#plt.show()
 
 
 			
@@ -239,8 +248,12 @@ class run:
 		
 		T_data_B_1 = T_data
 		R_data_B_1 = R_data
+		Tc_10p_B_1 = Tc_10p
+		Tc_90p_B_1 = Tc_90p
+		R_10p_B_1 = R_10p
+		R_90p_B_1 = R_90p
 		
-		fig = plt.figure(figsize=(8, 4), dpi=160).add_subplot(1, 1, 1)
+		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T_data, R_data, '.')
 		T_data = np.linspace(T_data[0],T_data[-1],1000)
 		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l), '--')
@@ -251,7 +264,8 @@ class run:
 		plt.ylabel(r"R / $\Omega$")
 		#plt.title("Tc Plot für I = 0A")
 		maximize()
-		plt.show()
+		plt.savefig(self.export_folder+"Tc_plot_B1"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
+		#plt.show()
 
 
 
@@ -298,8 +312,12 @@ class run:
 		
 		T_data_B_2 = T_data
 		R_data_B_2 = R_data
+		Tc_10p_B_2 = Tc_10p
+		Tc_90p_B_2 = Tc_90p
+		R_10p_B_2 = R_10p
+		R_90p_B_2 = R_90p
 		
-		fig = plt.figure(figsize=(8, 4), dpi=160).add_subplot(1, 1, 1)
+		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T_data, R_data, '.')
 		T_data = np.linspace(T_data[0],T_data[-1],1000)
 		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l), '--')
@@ -310,6 +328,7 @@ class run:
 		plt.ylabel(r"R / $\Omega$")
 		#plt.title("Tc Plot für I = 0A")
 		maximize()
+		plt.savefig(self.export_folder+"Tc_plot_B2"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
 
 
@@ -317,14 +336,76 @@ class run:
 		print(80*"_"+"\n\nPlotting: Tc Plot (alle)")
 
 		
-		fig = plt.figure(figsize=(8, 4), dpi=160).add_subplot(1, 1, 1)
+		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T_data_B_0, R_data_B_0, '.', label = r"$\mu_0$H=0")
 		plt.plot(T_data_B_2, R_data_B_2, '.', label = r"$\mu_0$H=129mT")
 		plt.plot(T_data_B_1, R_data_B_1, '.', label = r"$\mu_0$H=259mT")
 		plt.xlabel("T / K")
 		plt.ylabel(r"R / $\Omega$")
+		plt.xlim(5, None)
 		#plt.title("Tc Plot für I = 0A")
-		plt.legend()
+		#plt.legend(loc='lower right')
+		plt.legend(loc='upper left')
 		maximize()
+		plt.savefig(self.export_folder+"Tc_plot_all"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
 
+
+			
+		print(80*"_"+"\n\nPlotting: Phasendiagramm Niob")
+		
+		# fitting the function
+		fit_range = [None, None]
+		fit_plot_range = [None, None]
+		
+		I_data = [0, 4, 8]
+		B_data = [i * 194/6 for i in I_data]	# 6A entspricht 194mT
+		
+		phi0 = 2.067833848e-15
+		
+		# for 10percent curve
+		T_data_10p = [Tc_10p_B_0, Tc_10p_B_2, Tc_10p_B_1]
+		
+		popt_10p, pcov_10p = curve_fit(lin, T_data_10p[fit_range[0]:fit_range[1]], B_data[fit_range[0]:fit_range[1]]) 
+			
+		Tc = Tc_10p_B_0
+		S = 1e-3*popt_10p[1]
+		xi0 = np.sqrt(-phi0/(2 * np.pi * S * Tc))
+		l = xi0**2 / 39e-9
+		B_c2 = phi0 / (2 * np.pi * xi0**2)
+		print("\nFür 10%:\n")
+		print("Kohärenzlänge xi0={:.4}nm".format(1e9*xi0))
+		print("mittlere freie Weglänge l={:.4}nm".format(1e9*l))
+		print("oberes krit. Magnetfeld Bc2={:.4}T".format(B_c2))
+		
+		# for 90percent curve
+		T_data_90p = [Tc_90p_B_0, Tc_90p_B_2, Tc_90p_B_1]
+		
+		popt_90p, pcov_90p = curve_fit(lin, T_data_90p[fit_range[0]:fit_range[1]], B_data[fit_range[0]:fit_range[1]])
+			
+		Tc = Tc_90p_B_0
+		S = 1e-3*popt_90p[1]
+		xi0 = np.sqrt(-phi0/(2 * np.pi * S * Tc))
+		l = xi0**2 / 39e-9
+		B_c2 = phi0 / (2 * np.pi * xi0**2)
+		print("\nFür 90%:\n")
+		print("Kohärenzlänge xi0={:.4}nm".format(1e9*xi0))
+		print("mittlere freie Weglänge l={:.4}nm".format(1e9*l))
+		print("oberes krit. Magnetfeld Bc2={:.4}T".format(B_c2))
+		
+		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
+		plt.plot(T_data_10p, B_data, 'o')
+		plt.plot(T_data_90p, B_data, 'o')
+		T_data_10p = np.linspace(T_data_10p[fit_plot_range[0]:fit_plot_range[1]][0],T_data_10p[fit_plot_range[0]:fit_plot_range[1]][-1],1000)
+		T_data_90p = np.linspace(T_data_90p[fit_plot_range[0]:fit_plot_range[1]][0],T_data_90p[fit_plot_range[0]:fit_plot_range[1]][-1],1000)
+		plt.plot(T_data_10p, lin(T_data_10p, *popt_10p), '--', color= "tab:blue", label = r"Lin. Fit: $y=S\cdot x+a$"+"\n"+r"S=({:.4}$\pm${:.3})mT/K".format(popt_10p[1],np.sqrt(np.diag(pcov_10p))[1]))
+		plt.plot(T_data_90p, lin(T_data_90p, *popt_90p), '--', color= "tab:orange", label = r"Lin. Fit: $y=S\cdot x+a$"+"\n"+r"S=({:.4}$\pm${:.3})mT/K".format(popt_90p[1],np.sqrt(np.diag(pcov_90p))[1]))
+		plt.xlabel(r"$T_C$ / K")
+		plt.ylabel(r"$B_C$ / mT")
+		plt.xlim(None,10)
+		plt.ylim(0,None)
+		#plt.title("Phasendiagramm Niob")
+		plt.legend(loc='upper right')
+		maximize()
+		plt.savefig(self.export_folder+"phasen_diagramm"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
+		plt.show()
