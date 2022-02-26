@@ -43,7 +43,7 @@ class run:
 		# t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Cu), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
 		#t, T, R_P_1, R_T, R_P_2 = np.loadtxt("Heinzelmann_Vincent_Cu-Si.dat",  unpack = True, skiprows = 6)
 		
-		data = dataSet[0]
+		data = dataSet[2]
 		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'],data['R_P_1'],data['R_T'],data['R_P_2']
 		
 		# Plot T over t
@@ -242,7 +242,7 @@ class run:
 		# Load Nb-Si data
 		# t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Nb), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
 		#t, T, R_P_1, R_T, R_P_2 = np.loadtxt("Heinzelmann_Vincent_Nb-Si.dat",  unpack = True, skiprows = 6)
-		data = dataSet[2]
+		data = dataSet[0]
 		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'],data['R_P_1'],data['R_T'],data['R_P_2']
 			
 		# Plot T over t
