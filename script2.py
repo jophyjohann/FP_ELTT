@@ -242,7 +242,7 @@ class run:
 		# Load Nb-Si data
 		# t=time/s, T = Temp/Kelvin, R_P_1 = R_Probe_1/Ohm (Nb), R_T = R_Thermometer/Ohm, R_P_2 = R_Probe_2/Ohm (Si)
 		#t, T, R_P_1, R_T, R_P_2 = np.loadtxt("Heinzelmann_Vincent_Nb-Si.dat",  unpack = True, skiprows = 6)
-		data = dataSet[0]
+		data = dataSet[1]
 		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'],data['R_P_1'],data['R_T'],data['R_P_2']
 			
 		# Plot T over t
@@ -350,7 +350,7 @@ class run:
 		#plt.xlim(0, 0.04)
 		#plt.ylim(0, 120)
 		#plt.yscale('log')
-		plt.title(r"$\ln(\sigma)$ of Si over inversed Temperature")
+		plt.title(r"$\ln(\sigma)$ of Si over inverse Temperature")
 		#plt.savefig('log_sigma_over_rec_temp2_Fit.pdf', bbox_inches='tight')
 		plt.show()
 		

@@ -13,7 +13,7 @@ class run:
 		self.export_folder = "export/script" + __name__[-1] + "/"
 		self.export_extension = ".png"
 		self.dpi = 400
-		self.figsize0 = (4, 4.5)
+		self.figsize0 = (4.5, 4.5)
 		self.figsize = (6.5, 4.5)
 		self.figsize2 = (7.5, 4.5)
 		self.figsize3 = (8.5, 4.5)
@@ -81,7 +81,7 @@ class run:
 		
 		# Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Cu)
 		print(r"Resistance of Cu over Temperature")
-		fig = plt.figure(figsize=self.figsize3, dpi=80).add_subplot(1, 1, 1)
+		fig = plt.figure(figsize=self.figsize2, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T,R_P_1,'.', label='Widerstand von Cu', color = "deepskyblue", markersize=self.markersize)
 		plt.xlabel(r"Temperatur T / K")
 		plt.ylabel(r"Cu Widerstand R / $\Omega$")
@@ -277,7 +277,7 @@ class run:
 			
 		# Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Nb)
 		print(r"Resistance of Nb over Temperature")
-		fig = plt.figure(figsize=self.figsize3, dpi=80).add_subplot(1, 1, 1)
+		fig = plt.figure(figsize=self.figsize2, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T,R_P_1,'.', label='Resistance of Nb', color = "deepskyblue", markersize=self.markersize)
 		plt.xlabel(r"Temperatur T / K")
 		plt.ylabel(r"Nb Widerstand R / $\Omega$")
@@ -287,4 +287,41 @@ class run:
 		plt.savefig(self.export_folder+"R_Nb(T)"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
 
+
+			
 		
+		data = dataSet[1]
+		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'],data['R_P_1'],data['R_T'],data['R_P_2']
+
+		# Plot ln(sigma) over 1/T, (R_P_2 = R_Probe_2/Ohm (Si))
+		R_P_2+=np.abs(min(R_P_2))+100
+		sigma = 6.5*10**(-3)/(R_P_2*5.4*10**(-6))
+											
+		x = 1/T
+		y= np.log(sigma)
+		
+		# linear fit
+		plot_range = [0,3709]
+		fit_range2 = [2650, 3415]
+		fit_plot_range2 = [2650, 3415]
+		
+		fit_parameters_Si_lin = [["m", "n"],
+														 [-1  ,   1]]		 # start values
+		
+		popt, pcov = curve_fit(lin, x[fit_range2[0]:fit_range2[1]], y[fit_range2[0]:fit_range2[1]], fit_parameters_Si_lin[1])  
+		popt_sigma_lin = popt.copy()
+		pcov_sigma_lin = pcov.copy()
+		
+		
+		print("ln(sigma) of Si over inverse Temperature")
+		fig = plt.figure(figsize=self.figsize2, dpi=80).add_subplot(1, 1, 1)
+		plt.plot(x[plot_range[0]:plot_range[1]], y[plot_range[0]:plot_range[1]],'.', label='ln($\sigma$)', color = "deepskyblue", markersize=self.markersize)
+		plt.plot(x[fit_plot_range2[0]:fit_plot_range2[1]], lin(x, *popt_sigma_lin)[fit_plot_range2[0]:fit_plot_range2[1]], 'r--', label="Linear-Fit", linewidth=self.linewidth_fit)
+		plt.xlabel(r"reziproke Temperatur 1/T / 1/K")
+		plt.ylabel(r"ln($\sigma$) / $\ln((\Omega\cdot m)^{-1})$")
+		plt.legend()
+		#plt.xlim(0, 0.04)
+		#plt.ylim(0, 120)
+		maximize()
+		plt.savefig(self.export_folder+"R_Nb(T)"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
+		plt.show()
