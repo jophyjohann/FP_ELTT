@@ -138,10 +138,10 @@ class run:
 		# fitting the T^3 function
 		fit_range3 = [0,1500]
 		
-		fit_parameters = [["a" ,"b", "c"],   
-										  [ 1e-5,		 -0.01, 0.1],		  # max bounds
-										  [2e-6,   -4.2, 0.07],		# start values
-										  [1e-6, -10, 0]]		 # min bounds
+		fit_parameters = [["a" ,   "b", "Rr"],   
+										  [ 1e-5,-0.01,  0.1],		  # max bounds
+										  [2e-6,  -4.2, 0.07],		# start values
+										  [1e-8,   -10,    0]]		 # min bounds
 		
 		popt, pcov = curve_fit(func1, T[fit_range3[0]:fit_range3[1]], R_P_1[fit_range3[0]:fit_range3[1]], fit_parameters[2], bounds=(fit_parameters[3],fit_parameters[1]))
 		
@@ -176,13 +176,15 @@ class run:
 		print(r"Resistance of Cu over Temperature")
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T,R_P_1,'.',  label=r'$R_{Cu}$', color = "deepskyblue", markersize=self.markersize)
-		plt.plot(T[fit_range3[0]:fit_range3[1]], func1(T[fit_range3[0]:fit_range3[1]], *popt1), 'r--', label=r"Fit: $R = a\cdot(T+b)^3 + c$"+"\n"+r"$\Rightarrow$ R(4.2K)={:.4}$\Omega$".format(K_1), linewidth=self.linewidth_fit)
-		plt.plot(T[fit_range[0]:fit_range[1]], lin(T[fit_range[0]:fit_range[1]], *popt2), '--', color="tab:orange", label=r"Lin. Fit: $R = m\cdot T + n$"+"\n"+r"$\Rightarrow$ R(300K)={:.4}$\Omega$".format(K_2), linewidth=self.linewidth_fit)
+		plt.plot(T[fit_range3[0]:fit_range3[1]], func1(T[fit_range3[0]:fit_range3[1]], *popt1), 'r--', label=r"Fit: $R = a\cdot T^3 + R_R$"+"\n"+r"$R_R={:.3}\Omega$".format(popt1[2]), linewidth=self.linewidth_fit)
+		#+"\n"+r"$\Rightarrow$ R(4.2K)={:.4}$\Omega$".format(K_1)
+		plt.plot(T[fit_range[0]:fit_range[1]], lin(T[fit_range[0]:fit_range[1]], *popt2), '--', color="tab:orange", label=r"Lin. Fit: $R = m\cdot T + n$"+"\n"+r"m={:.3}$\Omega$/K".format(popt2[0])+"\n"+r"n={:.4}$\Omega$".format(popt2[1]), linewidth=self.linewidth_fit)
+		#+"\n"+r"$\Rightarrow$ R(300K)={:.4}$\Omega$".format(K_2)
 		plt.xlabel(r"Temperatur T / K")
 		plt.ylabel(r"Widerstand R / $\Omega$")
 		plt.legend(markerscale=2)
 		plt.xlim(0, None)
-		plt.ylim(0, 3.5)
+		plt.ylim(0, 3.8)
 		maximize()
 		plt.savefig(self.export_folder+"R_Cu(T)_T_Fit"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
@@ -229,8 +231,8 @@ class run:
 		print(r"Reduced Resistivity of Cu over reduced Temperature")
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(rho[0], rho[1],'.', label=r'Cu-Probe', color = "deepskyblue", markersize=self.markersize)
-		plt.plot(Na_T, Na_R,'.', color="tab:orange", label='Na', markersize=self.markersize2)
-		plt.plot(Au_T, Au_R,'.', color="tab:green", label='Au', markersize=self.markersize2)
+		plt.plot(Na_T, Na_R,'.', color="tab:green", label='Na', markersize=self.markersize2)
+		plt.plot(Au_T, Au_R,'.', color="tab:orange", label='Au', markersize=self.markersize2)
 		plt.plot(Cu_T, Cu_R,'.', color="tab:red", label='Cu', markersize=self.markersize2)
 		plt.plot(Al_T, Al_R,'.', color="tab:purple", label='Al', markersize=self.markersize2)
 		plt.plot(Ni_T, Ni_R,'.', color="tab:brown", label='Ni', markersize=self.markersize2)
