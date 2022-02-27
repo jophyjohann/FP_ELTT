@@ -12,7 +12,7 @@ class run:
 
 		self.export_folder = "export/script" + __name__[-1] + "/"
 		self.export_extension = ".png"
-		self.dpi = 300
+		self.dpi = 400
 		self.figsize = (6.5, 4.5)
 		self.figsize2 = (7.5, 4.5)
 		self.figsize3 = (8.5, 4.5)
@@ -83,7 +83,7 @@ class run:
 		fig = plt.figure(figsize=self.figsize3, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T,R_P_1,'.', label='Widerstand von Cu', color = "deepskyblue", markersize=self.markersize)
 		plt.xlabel(r"Temperatur T / K")
-		plt.ylabel(r"Widerstand $R_{Cu}$ / $\Omega$")
+		plt.ylabel(r"Cu Widerstand R / $\Omega$")
 		#plt.legend()
 		plt.xlim(0, 320)
 		plt.ylim(0, 3)
@@ -230,7 +230,7 @@ class run:
 		fig = plt.figure(figsize=self.figsize3, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T,R_P_2/1e6, '.', label='Widerstand Si', color = "deepskyblue", markersize=self.markersize)
 		plt.xlabel(r"Temperatur T / K")
-		plt.ylabel(r"Widerstand $R_{Si}$ / M$\Omega$")
+		plt.ylabel(r"Si Widerstand R / M$\Omega$")
 		plt.xlim(25, 35)
 		#plt.ylim(0, 120)
 		#plt.yscale('log')
@@ -245,17 +245,19 @@ class run:
 		fig = plt.figure(figsize=self.figsize3, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T,R_P_2, '.', label='Widerstand Si', color = "deepskyblue", markersize=self.markersize)
 		plt.xlabel(r"Temperatur T / K")
-		plt.ylabel(r"Widerstand $R_{Si}$ / $\Omega$")
+		plt.ylabel(r"Si Widerstand R / $\Omega$")
 		plt.xlim(185, 255)
 		plt.ylim(0, 260)
 		#plt.yscale('log')
+		fig.yaxis.set_label_position("right")
+		fig.yaxis.tick_right()
 		maximize()
 		plt.savefig(self.export_folder+"R_Si(T)_2"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
 
 
 			
-		data = dataSet[0]
+		data = dataSet[1]
 		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'],data['R_P_1'],data['R_T'],data['R_P_2']
 		
 		# Plot T over t
@@ -277,7 +279,7 @@ class run:
 		fig = plt.figure(figsize=self.figsize3, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T,R_P_1,'.', label='Resistance of Nb', color = "deepskyblue", markersize=self.markersize)
 		plt.xlabel(r"Temperatur T / K")
-		plt.ylabel(r"Widerstand $R_{Nb}$ / $\Omega$")
+		plt.ylabel(r"Nb Widerstand R / $\Omega$")
 		plt.xlim(0, None)
 		#plt.ylim(0, None)
 		maximize()

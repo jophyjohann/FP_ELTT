@@ -11,7 +11,7 @@ class run:
 
 		self.export_folder = "export/script" + __name__[-1] + "/"
 		self.export_extension = ".png"
-		self.dpi = 300
+		self.dpi = 400
 		self.figsize = (6.5, 4.5)
 		self.markersize = 10
 

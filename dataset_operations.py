@@ -10,8 +10,8 @@ class DataSet_Operations:
 		self.working_path = os.getcwd()
 
 		#automatically inserted dataset_files:
-		self.dataset_files = ["Heinzelmann_Vincent_Nb-Si.dat",
-										 "Heinzelmann_Vincent_Nb_H-Feld.dat",
+		self.dataset_files = ["Heinzelmann_Vincent_Nb_H-Feld.dat",
+										 "Heinzelmann_Vincent_Nb-Si.dat",
 										 "Heinzelmann_Vincent_Cu-Si.dat",
 										 ]
 		#end of automatically inserted dataset_files

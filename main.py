@@ -12,8 +12,8 @@ class run:
 
 		self.n_scripts = len(glob.glob("script*.py"))
 		
-		self.dat.insert_dataset_files()
-		self.dat2.insert_dataset_files()
+		#self.dat.insert_dataset_files()
+		#self.dat2.insert_dataset_files()
 
 
 	def script_start(self):
