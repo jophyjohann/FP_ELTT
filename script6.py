@@ -15,8 +15,10 @@ class run:
 		self.dpi = 300
 		self.figsize = (6.5, 4.5)
 		self.figsize2 = (7.5, 4.5)
+		self.figsize3 = (8.5, 4.5)
 		self.markersize = 7
-		self.markersize_fit = 20
+		self.markersize2 = 15
+		self.linewidth_fit = 2
 
 
 	def main(self):
@@ -72,13 +74,13 @@ class run:
 		plt.xlim(0, 5500)
 		plt.ylim(0, 320)
 		maximize()
-		plt.savefig(self.export_folder+"T_plot_warm_up"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
+		plt.savefig(self.export_folder+"T(t)_warm_up"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
 		
 		
 		# Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Cu)
 		print(r"Resistance of Cu over Temperature")
-		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
+		fig = plt.figure(figsize=self.figsize3, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T,R_P_1,'.', label='Widerstand von Cu', color = "deepskyblue", markersize=self.markersize)
 		plt.xlabel(r"Temperatur T / K")
 		plt.ylabel(r"Widerstand $R_{Cu}$ / $\Omega$")
@@ -86,7 +88,7 @@ class run:
 		plt.xlim(0, 320)
 		plt.ylim(0, 3)
 		maximize()
-		plt.savefig(self.export_folder+"R_Cu(T)_plot"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
+		plt.savefig(self.export_folder+"R_Cu(T)"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
 		
 		
@@ -115,12 +117,12 @@ class run:
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T, R_P_1, '.', label=r'$R_{Cu}$', color = "deepskyblue", markersize=self.markersize)
 		T = np.linspace(T[0],T[-1],1000)
-		plt.plot(T[fit_range[0]:fit_range[1]], func1(T[fit_range[0]:fit_range[1]], *popt), 'r--', label=r"Fit: $R = a\cdot(T+b)^3 + c$", markersize=self.markersize_fit)
+		plt.plot(T[fit_range[0]:fit_range[1]], func1(T[fit_range[0]:fit_range[1]], *popt), 'r--', label=r"Fit: $R = a\cdot(T+b)^3 + c$", linewidth=self.linewidth_fit)
 			
 		plt.xlabel(r"Temperatur T / K")
 		plt.ylabel(r"Widerstand $R_{Cu}$ / $\Omega$")
-		plt.legend()
-		#plt.xlim(0, 50)
+		plt.legend(markerscale=2)
+		plt.xlim(0, None)
 		#plt.ylim(0, 3)
 		maximize()
 		plt.savefig(self.export_folder+"R_Cu(T)_T3_Fit"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
@@ -154,12 +156,12 @@ class run:
 		print(r"Resistance of Cu over Temperature")
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T,R_P_1,'.',  label=r'$R_{Cu}$', color = "deepskyblue", markersize=self.markersize)
-		plt.plot(T[fit_range[0]:fit_range[1]], lin(T[fit_range[0]:fit_range[1]], *popt), 'r--', label=r"Fit: $R = m\cdot T + n$", markersize=self.markersize_fit)
+		plt.plot(T[fit_range[0]:fit_range[1]], lin(T[fit_range[0]:fit_range[1]], *popt), 'r--', label=r"Fit: $R = m\cdot T + n$", linewidth=self.linewidth_fit)
 			
 		plt.xlabel(r"Temperatur T / K")
 		plt.ylabel(r"Widerstand $R_{Cu}$ / $\Omega$")
-		plt.legend()
-		plt.xlim(0, 320)
+		plt.legend(markerscale=2)
+		plt.xlim(0, None)
 		plt.ylim(0, 3)
 		maximize()
 		plt.savefig(self.export_folder+"R_Cu(T)_T_Fit"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
@@ -206,11 +208,11 @@ class run:
 		print(r"Reduced Resistivity of Cu over reduced Temperature")
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(rho[0], rho[1],'.', label=r'Cu-Probe', color = "deepskyblue", markersize=self.markersize)
-		plt.plot(Na_T, Na_R,'.', color="tab:orange", label='Na', markersize=self.markersize)
-		plt.plot(Au_T, Au_R,'.', color="tab:green", label='Au', markersize=self.markersize)
-		plt.plot(Cu_T, Cu_R,'.', color="tab:red", label='Cu', markersize=self.markersize)
-		plt.plot(Al_T, Al_R,'.', color="tab:purple", label='Al', markersize=self.markersize)
-		plt.plot(Ni_T, Ni_R,'.', color="tab:brown", label='Ni', markersize=self.markersize)
+		plt.plot(Na_T, Na_R,'.', color="tab:orange", label='Na', markersize=self.markersize2)
+		plt.plot(Au_T, Au_R,'.', color="tab:green", label='Au', markersize=self.markersize2)
+		plt.plot(Cu_T, Cu_R,'.', color="tab:red", label='Cu', markersize=self.markersize2)
+		plt.plot(Al_T, Al_R,'.', color="tab:purple", label='Al', markersize=self.markersize2)
+		plt.plot(Ni_T, Ni_R,'.', color="tab:brown", label='Ni', markersize=self.markersize2)
 		
 		plt.xlabel(r"Reduz. Temperatur T / $\Theta_D$")
 		plt.ylabel(r"Reduz. Widerstand R / R($\Theta_D$)")
@@ -220,5 +222,66 @@ class run:
 		maximize()
 		plt.savefig(self.export_folder+"R_Cu(T)_red"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
+
 		
+		
+		# Plot R_P_2 over T, (R_P_2 = R_Probe_2/Ohm (Si))
+		print(r"Resistance of Si over Temperature")
+		fig = plt.figure(figsize=self.figsize3, dpi=80).add_subplot(1, 1, 1)
+		plt.plot(T,R_P_2/1e6, '.', label='Widerstand Si', color = "deepskyblue", markersize=self.markersize)
+		plt.xlabel(r"Temperatur T / K")
+		plt.ylabel(r"Widerstand $R_{Si}$ / M$\Omega$")
+		plt.xlim(25, 35)
+		#plt.ylim(0, 120)
+		#plt.yscale('log')
+		maximize()
+		plt.savefig(self.export_folder+"R_Si(T)"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
+		plt.show()
+
+
+			
+		# Plot R_P_2 over T, (R_P_2 = R_Probe_2/Ohm (Si)) 2
+		print(r"Resistance of Si over Temperature 2")
+		fig = plt.figure(figsize=self.figsize3, dpi=80).add_subplot(1, 1, 1)
+		plt.plot(T,R_P_2, '.', label='Widerstand Si', color = "deepskyblue", markersize=self.markersize)
+		plt.xlabel(r"Temperatur T / K")
+		plt.ylabel(r"Widerstand $R_{Si}$ / $\Omega$")
+		plt.xlim(185, 255)
+		plt.ylim(0, 260)
+		#plt.yscale('log')
+		maximize()
+		plt.savefig(self.export_folder+"R_Si(T)_2"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
+		plt.show()
+
+
+			
+		data = dataSet[0]
+		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'],data['R_P_1'],data['R_T'],data['R_P_2']
+		
+		# Plot T over t
+		print(r"Temperature over time of the cool down process")
+		fig = plt.figure(figsize=self.figsize2, dpi=80).add_subplot(1, 1, 1)
+		plt.plot(t,T,'.', label='Temperature', color = "deepskyblue", markersize=self.markersize)
+		plt.xlabel(r"Zeit t / s")
+		plt.ylabel(r"Temperatur T / K")
+		plt.xlim(0, None)
+		plt.ylim(0, None)
+		maximize()
+		plt.savefig(self.export_folder+"T(t)_cool_down"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
+		plt.show()
+		
+
+			
+		# Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Nb)
+		print(r"Resistance of Nb over Temperature")
+		fig = plt.figure(figsize=self.figsize3, dpi=80).add_subplot(1, 1, 1)
+		plt.plot(T,R_P_1,'.', label='Resistance of Nb', color = "deepskyblue", markersize=self.markersize)
+		plt.xlabel(r"Temperatur T / K")
+		plt.ylabel(r"Widerstand $R_{Nb}$ / $\Omega$")
+		plt.xlim(0, None)
+		#plt.ylim(0, None)
+		maximize()
+		plt.savefig(self.export_folder+"R_Nb(T)"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
+		plt.show()
+
 		

@@ -11,7 +11,7 @@ class run:
 
 		self.export_folder = "export/script" + __name__[-1] + "/"
 		self.export_extension = ".png"
-		self.dpi = 200
+		self.dpi = 300
 		self.figsize = (6.5, 4.5)
 		self.markersize = 10
 
@@ -174,7 +174,7 @@ class run:
 		fit_plot_range_os_r = [None, None]
 		#fit_plot_range_os_r = fit_range_os_r
 			
-		data = dataSet[2]
+		data = dataSet[1]
 		t_data = data['t']
 		T_data = data['T']
 		R_data = data['R_P_1']
@@ -235,7 +235,7 @@ class run:
 		fit_plot_range_os_r = [None, None]
 		#fit_plot_range_os_r = fit_range_os_r
 			
-		data = dataSet[2]
+		data = dataSet[1]
 		t_data = data['t']
 		T_data = data['T']
 		R_data = data['R_P_1']
@@ -299,7 +299,7 @@ class run:
 		fit_plot_range_os_r = [None, None]
 		#fit_plot_range_os_r = fit_range_os_r
 			
-		data = dataSet[2]
+		data = dataSet[1]
 		t_data = data['t']
 		T_data = data['T']
 		R_data = data['R_P_1']
