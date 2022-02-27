@@ -289,10 +289,6 @@ class run:
 
 
 			
-		
-		data = dataSet[1]
-		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'],data['R_P_1'],data['R_T'],data['R_P_2']
-
 		# Plot ln(sigma) over 1/T, (R_P_2 = R_Probe_2/Ohm (Si))
 		R_P_2+=np.abs(min(R_P_2))+100
 		sigma = 6.5*10**(-3)/(R_P_2*5.4*10**(-6))
@@ -316,12 +312,12 @@ class run:
 		print("ln(sigma) of Si over inverse Temperature")
 		fig = plt.figure(figsize=self.figsize2, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(x[plot_range[0]:plot_range[1]], y[plot_range[0]:plot_range[1]],'.', label='ln($\sigma$)', color = "deepskyblue", markersize=self.markersize)
-		plt.plot(x[fit_plot_range2[0]:fit_plot_range2[1]], lin(x, *popt_sigma_lin)[fit_plot_range2[0]:fit_plot_range2[1]], 'r--', label="Linear-Fit", linewidth=self.linewidth_fit)
+		plt.plot(x[fit_plot_range2[0]:fit_plot_range2[1]], lin(x, *popt_sigma_lin)[fit_plot_range2[0]:fit_plot_range2[1]], 'r--', label="Lin. Fit", linewidth=self.linewidth_fit)
 		plt.xlabel(r"reziproke Temperatur 1/T / 1/K")
-		plt.ylabel(r"ln($\sigma$) / $\ln((\Omega\cdot m)^{-1})$")
+		plt.ylabel(r"ln($\sigma$) von Si")
 		plt.legend()
 		#plt.xlim(0, 0.04)
 		#plt.ylim(0, 120)
 		maximize()
-		plt.savefig(self.export_folder+"R_Nb(T)"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
+		plt.savefig(self.export_folder+"LN_Sigma_Si(inv_T)"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
