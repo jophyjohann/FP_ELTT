@@ -13,6 +13,7 @@ class run:
 		self.export_folder = "export/script" + __name__[-1] + "/"
 		self.export_extension = ".png"
 		self.dpi = 400
+		self.figsize0 = (4, 4.5)
 		self.figsize = (6.5, 4.5)
 		self.figsize2 = (7.5, 4.5)
 		self.figsize3 = (8.5, 4.5)
@@ -227,7 +228,7 @@ class run:
 		
 		# Plot R_P_2 over T, (R_P_2 = R_Probe_2/Ohm (Si))
 		print(r"Resistance of Si over Temperature")
-		fig = plt.figure(figsize=self.figsize3, dpi=80).add_subplot(1, 1, 1)
+		fig = plt.figure(figsize=self.figsize0, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T,R_P_2/1e6, '.', label='Widerstand Si', color = "deepskyblue", markersize=self.markersize)
 		plt.xlabel(r"Temperatur T / K")
 		plt.ylabel(r"Si Widerstand R / M$\Omega$")
@@ -242,7 +243,7 @@ class run:
 			
 		# Plot R_P_2 over T, (R_P_2 = R_Probe_2/Ohm (Si)) 2
 		print(r"Resistance of Si over Temperature 2")
-		fig = plt.figure(figsize=self.figsize3, dpi=80).add_subplot(1, 1, 1)
+		fig = plt.figure(figsize=self.figsize0, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T,R_P_2, '.', label='Widerstand Si', color = "deepskyblue", markersize=self.markersize)
 		plt.xlabel(r"Temperatur T / K")
 		plt.ylabel(r"Si Widerstand R / $\Omega$")
