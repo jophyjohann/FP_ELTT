@@ -92,7 +92,7 @@ class run:
 		plt.savefig(self.export_folder+"R_Cu(T)"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
 		
-		
+		'''
 		# fitting the T^3 function
 		plot_range = [0,1087]
 		fit_range = [0,800]
@@ -118,8 +118,7 @@ class run:
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T, R_P_1, '.', label=r'$R_{Cu}$', color = "deepskyblue", markersize=self.markersize)
 		T = np.linspace(T[0],T[-1],1000)
-		plt.plot(T[fit_range[0]:fit_range[1]], func1(T[fit_range[0]:fit_range[1]], *popt), 'r--', label=r"Fit: $R = a\cdot(T+b)^3 + c$", linewidth=self.linewidth_fit)
-			
+		plt.plot(T[fit_range[0]:fit_range[1]], func1(T[fit_range[0]:fit_range[1]], *popt), 'r--', label=r"Fit: $R = a\cdot(T+b)^3 + c$", linewidth=self.linewidth_fit)	
 		plt.xlabel(r"Temperatur T / K")
 		plt.ylabel(r"Widerstand $R_{Cu}$ / $\Omega$")
 		plt.legend(markerscale=2)
@@ -128,28 +127,48 @@ class run:
 		maximize()
 		plt.savefig(self.export_folder+"R_Cu(T)_T3_Fit"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
+		'''
 
-			
+		
 		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'],data['R_P_1'],data['R_T'],data['R_P_2']
 		
-		
-		# fitting the linear T function
+		# fitting the linear T function with T^3
 		plot_range = [2647,3850]
-		fit_range = [2647,3800]
 			
-		fit_parameters = [["m" ,"n"],   
+		# fitting the T^3 function
+		fit_range3 = [0,1500]
+		
+		fit_parameters = [["a" ,"b", "c"],   
+										  [ 1e-5,		 -0.01, 0.1],		  # max bounds
+										  [2e-6,   -4.2, 0.07],		# start values
+										  [1e-6, -10, 0]]		 # min bounds
+		
+		popt, pcov = curve_fit(func1, T[fit_range3[0]:fit_range3[1]], R_P_1[fit_range3[0]:fit_range3[1]], fit_parameters[2], bounds=(fit_parameters[3],fit_parameters[1]))
+		
+		popt1 = popt.copy()
+		pcov1 = pcov.copy()
+		
+		K_1=func1(4.2, popt[0], popt[1], popt[2])
+		print("Fit eq: y= a*(x+b)^3")
+		print("a= {:.4g} +/- {:.4g}, b= {:.4g} +/- {:.4g}, c= {:.4g} +/- {:.4g}".format(popt1[0], np.sqrt(np.diag(pcov))[0], popt1[1], np.sqrt(np.diag(pcov))[1], popt1[2], np.sqrt(np.diag(pcov1))[2]))
+		print("R(4.2K)= {:.4g}".format(K_1))
+
+		# fitting the linear T function
+		fit_range = [2647,4200]
+		
+		fit_parameters = [["m"   ,  "n"],   
 										  [   0.1,  0.0],		  # max bounds
-										  [  0.01,  -0.5],		# start values
-										  [ 0.001,  -2]]		 # min bounds
+										  [  0.01, -0.5],		# start values
+										  [ 0.001,   -2]]		 # min bounds
 			
 		popt, pcov = curve_fit(lin, T[fit_range[0]:fit_range[1]], R_P_1[fit_range[0]:fit_range[1]], fit_parameters[2], bounds=(fit_parameters[3],fit_parameters[1]))
-			
-		opt_fit_parameters2 = popt.copy()
+		
+		popt2 = popt.copy()
 		pcov2 = pcov.copy()
 		K_2=lin(300, popt[0], popt[1])
 		RRR=K_2/K_1
 		print("Fit eq: y= m*x+n")
-		print("m= {:.4g} +/- {:.4g}, n= {:.4g} +/- {:.4g}".format(opt_fit_parameters2[0], np.sqrt(np.diag(pcov2))[0], opt_fit_parameters2[1], np.sqrt(np.diag(pcov2))[1]))
+		print("m= {:.4g} +/- {:.4g}, n= {:.4g} +/- {:.4g}".format(popt2[0], np.sqrt(np.diag(pcov2))[0], popt2[1], np.sqrt(np.diag(pcov2))[1]))
 		print("R(300K)= {:.4g}".format(K_2))
 		print("RRR=R(300K)/R(4.2K)= {:.4g}".format(RRR))
 			
@@ -157,16 +176,17 @@ class run:
 		print(r"Resistance of Cu over Temperature")
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T,R_P_1,'.',  label=r'$R_{Cu}$', color = "deepskyblue", markersize=self.markersize)
-		plt.plot(T[fit_range[0]:fit_range[1]], lin(T[fit_range[0]:fit_range[1]], *popt), 'r--', label=r"Fit: $R = m\cdot T + n$", linewidth=self.linewidth_fit)
-			
+		plt.plot(T[fit_range3[0]:fit_range3[1]], func1(T[fit_range3[0]:fit_range3[1]], *popt1), 'r--', label=r"Fit: $R = a\cdot(T+b)^3 + c$"+"\n"+r"$\Rightarrow$ R(4,2K)={:.5}$\Omega$".format(K_1), linewidth=self.linewidth_fit)
+		plt.plot(T[fit_range[0]:fit_range[1]], lin(T[fit_range[0]:fit_range[1]], *popt2), '--', color="tab:orange", label=r"Lin. Fit: $R = m\cdot T + n$"+"\n"+r"$\Rightarrow$ R(300K)={:.5}$\Omega$".format(K_2), linewidth=self.linewidth_fit)
 		plt.xlabel(r"Temperatur T / K")
-		plt.ylabel(r"Widerstand $R_{Cu}$ / $\Omega$")
+		plt.ylabel(r"Cu Widerstand R / $\Omega$")
 		plt.legend(markerscale=2)
 		plt.xlim(0, None)
-		plt.ylim(0, 3)
+		plt.ylim(0, 3.5)
 		maximize()
 		plt.savefig(self.export_folder+"R_Cu(T)_T_Fit"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
+
 		
 		# R(T) = R_rest + R_T(T)
 		# R_rest = R(4,2K) = K_1
@@ -176,9 +196,9 @@ class run:
 		# Daraus folgt Anstieg m = 1,17 R_T(Theta_D)/Theta_D, und n = -0.17R_T(Theta_D)
 		# m und n oben aus linearem Fit bestimmt. (wobei von n der Wert von R_rest = K_1 abgezogen werden muss)
 		# daraus folgt Theta_D = -1.17*n/(0.17*m)
-		n = opt_fit_parameters2[1]
-		m = opt_fit_parameters2[0]
-		Theta_D_Cu = -1.17*(n-K_1)/(0.17*opt_fit_parameters2[0])
+		n = popt2[1]
+		m = popt2[0]
+		Theta_D_Cu = -1.17*(n-K_1)/(0.17*popt2[0])
 		
 		# Gausschefehlerfortpflanzung um Delta Theta_D zu bestimmen aus fit unsicherheiten von m und n
 		Delta_m = np.sqrt(np.diag(pcov2))[0]
@@ -297,9 +317,9 @@ class run:
 		y= np.log(sigma)
 		
 		# linear fit
-		plot_range = [0,3709]
-		fit_range2 = [2650, 3415]
-		fit_plot_range2 = [2650, 3415]
+		plot_range = [0,3630]
+		fit_range2 = [3550, 3603]
+		fit_plot_range2 = [3300, 3603]
 		
 		fit_parameters_Si_lin = [["m", "n"],
 														 [-1  ,   1]]		 # start values
@@ -310,13 +330,24 @@ class run:
 		
 		
 		print("ln(sigma) of Si over inverse Temperature")
+		
+		e=1.602176634e-19 
+		kbt=(1.38064852e-23)/e # eV/K
+		
+		print("Parameter der lin Fits:\n")
+		print("m = {:.4g} +/- {:.4g}, n = {:.4g} +/- {:.4g}".format(popt_sigma_lin[0], np.diag(pcov_sigma_lin)[0], popt_sigma_lin[1], np.diag(pcov_sigma_lin)[1]))
+		print("E_Don = {:.4g} +/- {:.4g} eV".format(-2*popt_sigma_lin[0]*kbt, np.abs(-2*kbt*np.diag(pcov_sigma_lin)[0])))
+		E_donor_lit = 0.045 # eV
+		print("E_Don_lit - E_Don_1 = {:.4g}".format(np.abs(E_donor_lit + 2*popt_sigma_lin[0]*kbt)))
+
+		
 		fig = plt.figure(figsize=self.figsize2, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(x[plot_range[0]:plot_range[1]], y[plot_range[0]:plot_range[1]],'.', label='ln($\sigma$)', color = "deepskyblue", markersize=self.markersize)
-		plt.plot(x[fit_plot_range2[0]:fit_plot_range2[1]], lin(x, *popt_sigma_lin)[fit_plot_range2[0]:fit_plot_range2[1]], 'r--', label="Lin. Fit", linewidth=self.linewidth_fit)
-		plt.xlabel(r"reziproke Temperatur 1/T / 1/K")
-		plt.ylabel(r"ln($\sigma$) von Si")
-		plt.legend()
-		#plt.xlim(0, 0.04)
+		plt.plot(x[fit_plot_range2[0]:fit_plot_range2[1]], lin(x, *popt_sigma_lin)[fit_plot_range2[0]:fit_plot_range2[1]], 'r--', label=r"Lin. Fit: $R = m\cdot\frac{1}{T} + n$"+"\n"+r"m=({:.4}$\pm${:.3})mT/K".format(popt_sigma_lin[0],np.sqrt(np.diag(pcov_sigma_lin))[0]), linewidth=self.linewidth_fit)
+		plt.xlabel(r"reziproke Temperatur 1 / T")
+		plt.ylabel(r"ln($\sigma$)")
+		plt.legend(markerscale=2, loc="lower left")
+		plt.xlim(0, None)
 		#plt.ylim(0, 120)
 		maximize()
 		plt.savefig(self.export_folder+"LN_Sigma_Si(inv_T)"+self.export_extension, bbox_inches='tight', dpi=self.dpi)

@@ -174,7 +174,7 @@ class run:
 		fit_plot_range_os_r = [None, None]
 		#fit_plot_range_os_r = fit_range_os_r
 			
-		data = dataSet[1]
+		data = dataSet[0]
 		t_data = data['t']
 		T_data = data['T']
 		R_data = data['R_P_1']
@@ -235,7 +235,7 @@ class run:
 		fit_plot_range_os_r = [None, None]
 		#fit_plot_range_os_r = fit_range_os_r
 			
-		data = dataSet[1]
+		data = dataSet[0]
 		t_data = data['t']
 		T_data = data['T']
 		R_data = data['R_P_1']
@@ -299,7 +299,7 @@ class run:
 		fit_plot_range_os_r = [None, None]
 		#fit_plot_range_os_r = fit_range_os_r
 			
-		data = dataSet[1]
+		data = dataSet[0]
 		t_data = data['t']
 		T_data = data['T']
 		R_data = data['R_P_1']
@@ -411,8 +411,8 @@ class run:
 		plt.plot(T_data_90p, B_data, 'o', color = "tab:orange")
 		T_data_10p = np.linspace(T_data_10p[fit_plot_range[0]:fit_plot_range[1]][0],T_data_10p[fit_plot_range[0]:fit_plot_range[1]][-1],1000)
 		T_data_90p = np.linspace(T_data_90p[fit_plot_range[0]:fit_plot_range[1]][0],T_data_90p[fit_plot_range[0]:fit_plot_range[1]][-1],1000)
-		plt.plot(T_data_10p, lin(T_data_10p, *popt_10p), '--', markersize=self.markersize, color= "deepskyblue", label = r"Lin. Fit: $y=S\cdot x+a$"+"\n"+r"S=({:.4}$\pm${:.3})mT/K".format(popt_10p[1],np.sqrt(np.diag(pcov_10p))[1]))
-		plt.plot(T_data_90p, lin(T_data_90p, *popt_90p), '--', markersize=self.markersize, color= "tab:orange", label = r"Lin. Fit: $y=S\cdot x+a$"+"\n"+r"S=({:.4}$\pm${:.3})mT/K".format(popt_90p[1],np.sqrt(np.diag(pcov_90p))[1]))
+		plt.plot(T_data_10p, lin(T_data_10p, *popt_10p), '--', markersize=self.markersize, color= "deepskyblue", label = r"Lin. Fit: $B_C=S\cdot T_C+a$"+"\n"+r"S=({:.4}$\pm${:.3})mT/K".format(popt_10p[1],np.sqrt(np.diag(pcov_10p))[1]))
+		plt.plot(T_data_90p, lin(T_data_90p, *popt_90p), '--', markersize=self.markersize, color= "tab:orange", label = r"Lin. Fit: $B_C=S\cdot T_C+a$"+"\n"+r"S=({:.4}$\pm${:.3})mT/K".format(popt_90p[1],np.sqrt(np.diag(pcov_90p))[1]))
 		plt.xlabel(r"$T_C$ / K")
 		plt.ylabel(r"$B_C$ / mT")
 		plt.xlim(None,10.5)
