@@ -47,6 +47,10 @@ class run:
 		def func2(x, A, B, c, d, e):
 			return -np.log(A*(1/(e*(x + c)))**(-3/2)) - B/(e*(x + c)) + d
 		
+		def offset(x, b):
+			x = [b for i in x]
+			return x
+
 		plt.rcParams['font.size'] = '15'
 		#'''
 		plt.rcParams['axes.edgecolor'] = 'w'
@@ -353,4 +357,43 @@ class run:
 		#plt.ylim(0, 120)
 		maximize()
 		plt.savefig(self.export_folder+"LN_Sigma_Si(inv_T)"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
+		plt.show()
+
+
+		
+		# fitting the function
+		plot_range = [2650, None]
+		fit_range = [None, None]
+		
+		fit_range_os = [-600, -410]
+		fit_plot_range_os = [None, None]
+		fit_plot_range_os = fit_range_os
+		
+		fit_range_lin = [-1600, -1200]
+		fit_plot_range_lin = [None, None]
+		fit_plot_range_lin = fit_range_lin
+			
+		t_data = data['t']
+		T_data = data['T']
+		R_data = data['R_P_1']
+
+		t_data = t_data[plot_range[0]:plot_range[1]]
+		T_data = T_data[plot_range[0]:plot_range[1]]
+		R_data = R_data[plot_range[0]:plot_range[1]]
+
+		popt_os, pcov_os = curve_fit(offset, T_data[fit_range_os[0]:fit_range_os[1]], R_data[fit_range_os[0]:fit_range_os[1]])
+		
+		popt_lin, pcov_lin = curve_fit(lin, T_data[fit_range_lin[0]:fit_range_lin[1]], R_data[fit_range_lin[0]:fit_range_lin[1]])
+			
+		print("\nNiob (B=0) T Fit")
+		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
+		plt.plot(T_data, R_data, '.', color = "deepskyblue", markersize=self.markersize)
+		#T_data = np.linspace(T_data[0],T_data[-1],1000)
+		plt.plot(T_data[fit_plot_range_os[0]:fit_plot_range_os[1]], offset(T_data[fit_plot_range_os[0]:fit_plot_range_os[1]], *popt_os), 'w--', linewidth=self.linewidth_fit)
+		plt.plot(T_data[fit_plot_range_lin[0]:fit_plot_range_lin[1]], lin(T_data[fit_plot_range_lin[0]:fit_plot_range_lin[1]], *popt_lin), 'r--', linewidth=self.linewidth_fit)
+		plt.xlabel("Temperatur T / K")
+		plt.ylabel(r"Nb Widerstand R / $\Omega$")
+		#plt.legend()
+		maximize()
+		plt.savefig(self.export_folder+"Tc_plot_B0"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
