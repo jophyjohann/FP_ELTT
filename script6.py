@@ -122,7 +122,7 @@ class run:
 		#plt.plot(Tc_10p, R_10p, 'w+', markersize=20)
 		#plt.plot(Tc_90p, R_90p, 'w+', markersize=20)
 		plt.xlabel("Temperatur T / K")
-		plt.ylabel(r"Nb Widerstand R / $\Omega$")
+		plt.ylabel(r"Widerstand R / $\Omega$")
 		plt.legend(loc="center left")
 		maximize()
 		plt.savefig(self.export_folder+"R_Nb(T)_Tc"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
@@ -353,7 +353,7 @@ class run:
 
 			
 		data = dataSet[1]
-		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'],data['R_P_1'] - R0_MB,data['R_T'],data['R_P_2'] - R0_MB
+		t, T, R_P_1, R_T, R_P_2 = data['t'], data['T'], data['R_P_1'], data['R_T'], data['R_P_2']
 		
 		# Plot T over t
 		print(r"Temperature over time of the cool down process")
@@ -376,13 +376,15 @@ class run:
 		plt.xlabel(r"Temperatur T / K")
 		plt.ylabel(r"Nb Widerstand R / $\Omega$")
 		plt.xlim(0, None)
-		plt.ylim(0, None)
+		#plt.ylim(0, None)
 		maximize()
 		plt.savefig(self.export_folder+"R_Nb(T)"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
 
 
-			
+		data = dataSet[1]
+		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'],data['R_P_1'] - R0_MB,data['R_T'],data['R_P_2'] - R0_MB
+		
 		# Plot ln(sigma) over 1/T, (R_P_2 = R_Probe_2/Ohm (Si))
 		R_P_2+=np.abs(min(R_P_2))+100
 		sigma = 6.5*10**(-3)/(R_P_2*5.4*10**(-6))
@@ -460,7 +462,7 @@ class run:
 		plt.plot(T_data[fit_plot_range_os[0]:fit_plot_range_os[1]], offset(T_data[fit_plot_range_os[0]:fit_plot_range_os[1]], *popt_os), 'r--', label=r"$R_R={:.4}\Omega$".format(popt_os[0]), linewidth=self.linewidth_fit)
 		plt.plot(T_data[fit_plot_range_lin[0]:fit_plot_range_lin[1]], lin(T_data[fit_plot_range_lin[0]:fit_plot_range_lin[1]], *popt_lin), '--', color="tab:orange", label=r"Lin. Fit: $R = m\cdot T + n$"+"\n"+r"$m={:.3}\Omega$/K".format(popt_lin[0])+"\n"+r"$n={:.3}\Omega$".format(popt_lin[1]), linewidth=self.linewidth_fit)
 		plt.xlabel("Temperatur T / K")
-		plt.ylabel(r"Nb Widerstand R / $\Omega$")
+		plt.ylabel(r"Widerstand R / $\Omega$")
 		plt.legend()
 		plt.xlim(0,None)
 		plt.ylim(0,None)

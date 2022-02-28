@@ -198,15 +198,17 @@ class run:
 		Tc_90p = min(T_data[np.where(R_data==R_90p)])
 		print("Tc @ 90% = ",Tc_90p)
 
+		R0_MB=popt_os_l[0]
+		
 		T_data_B_0 = T_data
-		R_data_B_0 = R_data
+		R_data_B_0 = R_data - R0_MB
 		Tc_10p_B_0 = Tc_10p
 		Tc_90p_B_0 = Tc_90p
-		R_10p_B_0 = R_10p
-		R_90p_B_0 = R_90p
+		R_10p_B_0 = R_10p - R0_MB
+		R_90p_B_0 = R_90p - R0_MB
 			
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
-		plt.plot(T_data, R_data, '.', color = "deepskyblue", markersize=self.markersize)
+		plt.plot(T_data_B_0, R_data_B_0, '.', color = "deepskyblue", markersize=self.markersize)
 		T_data = np.linspace(T_data[0],T_data[-1],1000)
 		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l), 'w--', markersize=self.markersize)
 		plt.plot(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], offset(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], *popt_os_r), 'w--', markersize=self.markersize)
