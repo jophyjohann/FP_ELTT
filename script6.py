@@ -65,9 +65,72 @@ class run:
 		plt.rcParams['savefig.transparent'] = 'True'
 		#'''
 		
+
+		print(80*"_"+"\n\nPlotting: Nb Tc Plot für B = 0")
+
+		# fitting the function
+		plot_range = [670, 770]
+		fit_range = [None, None]
+		
+		fit_range_os_l = [-35, None]
+		fit_plot_range_os_l = [None, None]
+		#fit_plot_range_os_l = fit_range_os_l
+		
+		fit_range_os_r = [None, -68]
+		fit_plot_range_os_r = [None, None]
+		#fit_plot_range_os_r = fit_range_os_r
+			
+		data = dataSet[0]
+		t_data = data['t']
+		T_data = data['T']
+		R_data = data['R_P_1']
+
+		t_data = t_data[plot_range[0]:plot_range[1]]
+		T_data = T_data[plot_range[0]:plot_range[1]]
+		R_data = R_data[plot_range[0]:plot_range[1]]
+
+		popt_os_l, pcov_os_l = curve_fit(offset, T_data[fit_range_os_l[0]:fit_range_os_l[1]], R_data[fit_range_os_l[0]:fit_range_os_l[1]])
+		popt_os_r, pcov_os_r = curve_fit(offset, T_data[fit_range_os_r[0]:fit_range_os_r[1]], R_data[fit_range_os_r[0]:fit_range_os_r[1]])
+
+		R_p_10p = (popt_os_r[0] - popt_os_l[0]) * 0.01 + popt_os_l[0]
+		search_points = R_data[fit_range_os_l[1]:fit_range_os_l[0]]
+		R_10p = search_points[np.abs(search_points-R_p_10p).argmin()]
+		Tc_10p = max(T_data[np.where(R_data==R_10p)])
+		print("Tc @ 10% = {:.5}".format(Tc_10p))
+			
+		R_p_90p = (popt_os_r[0] - popt_os_l[0]) * 0.99 + popt_os_l[0]
+		search_points = R_data[fit_range_os_r[1]:fit_range_os_r[0]]
+		R_90p = search_points[np.abs(search_points-R_p_90p).argmin()]
+		Tc_90p = min(T_data[np.where(R_data==R_90p)])
+		print("Tc @ 90% = {:.5}".format(Tc_90p))
+
+		Tc_50p = Tc_10p + (Tc_90p - Tc_10p) / 2
+		R_50p = R_10p + (R_90p - R_10p) / 2
+		
+		R0_MB=popt_os_l[0]
+		print("\nTc @ 50% = {:.5}".format(Tc_50p))
+		print("\nR0_MB = {:.5}".format(R0_MB))
+			
+		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
+		plt.plot(T_data, R_data, '.', color = "deepskyblue", markersize=self.markersize)
+		T_data = np.linspace(T_data[0],T_data[-1],1000)
+		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l), 'r--', linewidth=self.linewidth_fit, label=r"$R^0_{MB}$"+r"={:.4}m$\Omega$".format(R0_MB*1e3))
+		plt.plot(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], offset(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], *popt_os_r), '--', color="tab:orange", linewidth=self.linewidth_fit)
+		#plt.vlines(Tc_50p, fig.axes.get_ylim()[0], fig.axes.get_ylim()[1], 'g--')
+		plt.vlines(Tc_50p, fig.axes.get_ylim()[0], fig.axes.get_ylim()[1], color="w", linestyle="--", linewidth=self.linewidth_fit, label=r"$T_C$={:.4}K".format(Tc_50p))
+		#plt.plot(Tc_50p, R_50p, 'w+', markersize=20)
+		#plt.plot(Tc_10p, R_10p, 'w+', markersize=20)
+		#plt.plot(Tc_90p, R_90p, 'w+', markersize=20)
+		plt.xlabel("Temperatur T / K")
+		plt.ylabel(r"Nb Widerstand R / $\Omega$")
+		plt.legend(loc="center left")
+		maximize()
+		plt.savefig(self.export_folder+"R_Nb(T)_Tc"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
+		plt.show()
+
 		
 		data = dataSet[2]
-		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'],data['R_P_1'],data['R_T'],data['R_P_2']
+		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'],data['R_P_1'] - R0_MB,data['R_T'],data['R_P_2'] - R0_MB
 		
 		# Plot T over t
 		print(r"Temperature over time of the Warm up process")
@@ -81,8 +144,11 @@ class run:
 		maximize()
 		plt.savefig(self.export_folder+"T(t)_warm_up"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
+
 		
-		
+		data = dataSet[2]
+		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'], data['R_P_1'], data['R_T'], data['R_P_2']
+			
 		# Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Cu)
 		print(r"Resistance of Cu over Temperature")
 		fig = plt.figure(figsize=self.figsize2, dpi=80).add_subplot(1, 1, 1)
@@ -134,7 +200,7 @@ class run:
 		'''
 
 		
-		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'],data['R_P_1'],data['R_T'],data['R_P_2']
+		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'],data['R_P_1'] - R0_MB,data['R_T'],data['R_P_2'] - R0_MB
 		
 		# fitting the linear T function with T^3
 		plot_range = [2647,3850]
@@ -179,7 +245,7 @@ class run:
 		# Plot R_P_1 over T, (R_P_1 = R_Probe_1/Ohm)(Cu) reduced range with T^1 fit
 		print(r"Resistance of Cu over Temperature")
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
-		plt.plot(T,R_P_1,'.',  label=r'$R_{Cu}$', color = "deepskyblue", markersize=self.markersize)
+		plt.plot(T,R_P_1,'.', color = "deepskyblue", markersize=self.markersize)
 		plt.plot(T[fit_range3[0]:fit_range3[1]], func1(T[fit_range3[0]:fit_range3[1]], *popt1), 'r--', label=r"Fit: $R = a\cdot T^3 + R_R$"+"\n"+r"$R_R={:.3}\Omega$".format(popt1[2]), linewidth=self.linewidth_fit)
 		#+"\n"+r"$\Rightarrow$ R(4.2K)={:.4}$\Omega$".format(K_1)
 		plt.plot(T[fit_range[0]:fit_range[1]], lin(T[fit_range[0]:fit_range[1]], *popt2), '--', color="tab:orange", label=r"Lin. Fit: $R = m\cdot T + n$"+"\n"+r"m={:.3}$\Omega$/K".format(popt2[0])+"\n"+r"n={:.4}$\Omega$".format(popt2[1]), linewidth=self.linewidth_fit)
@@ -188,7 +254,7 @@ class run:
 		plt.ylabel(r"Widerstand R / $\Omega$")
 		plt.legend(markerscale=2)
 		plt.xlim(0, None)
-		plt.ylim(0, 3.8)
+		plt.ylim(0, None)
 		maximize()
 		plt.savefig(self.export_folder+"R_Cu(T)_T_Fit"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
@@ -250,7 +316,9 @@ class run:
 		plt.savefig(self.export_folder+"R_Cu(T)_red"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
 
-		
+
+			
+		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'],data['R_P_1'],data['R_T'],data['R_P_2']
 		
 		# Plot R_P_2 over T, (R_P_2 = R_Probe_2/Ohm (Si))
 		print(r"Resistance of Si over Temperature")
@@ -285,7 +353,7 @@ class run:
 
 			
 		data = dataSet[1]
-		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'],data['R_P_1'],data['R_T'],data['R_P_2']
+		t, T, R_P_1, R_T, R_P_2 = data['t'],data['T'],data['R_P_1'] - R0_MB,data['R_T'],data['R_P_2'] - R0_MB
 		
 		# Plot T over t
 		print(r"Temperature over time of the cool down process")
@@ -308,7 +376,7 @@ class run:
 		plt.xlabel(r"Temperatur T / K")
 		plt.ylabel(r"Nb Widerstand R / $\Omega$")
 		plt.xlim(0, None)
-		#plt.ylim(0, None)
+		plt.ylim(0, None)
 		maximize()
 		plt.savefig(self.export_folder+"R_Nb(T)"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
@@ -369,13 +437,13 @@ class run:
 		fit_plot_range_os = [None, None]
 		fit_plot_range_os = fit_range_os
 		
-		fit_range_lin = [-1600, -1200]
+		fit_range_lin = [-1800, -1200]
 		fit_plot_range_lin = [None, None]
 		fit_plot_range_lin = fit_range_lin
 			
 		t_data = data['t']
 		T_data = data['T']
-		R_data = data['R_P_1']
+		R_data = data['R_P_1'] - R0_MB
 
 		t_data = t_data[plot_range[0]:plot_range[1]]
 		T_data = T_data[plot_range[0]:plot_range[1]]
@@ -389,11 +457,13 @@ class run:
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T_data, R_data, '.', color = "deepskyblue", markersize=self.markersize)
 		#T_data = np.linspace(T_data[0],T_data[-1],1000)
-		plt.plot(T_data[fit_plot_range_os[0]:fit_plot_range_os[1]], offset(T_data[fit_plot_range_os[0]:fit_plot_range_os[1]], *popt_os), 'w--', linewidth=self.linewidth_fit)
-		plt.plot(T_data[fit_plot_range_lin[0]:fit_plot_range_lin[1]], lin(T_data[fit_plot_range_lin[0]:fit_plot_range_lin[1]], *popt_lin), 'r--', linewidth=self.linewidth_fit)
+		plt.plot(T_data[fit_plot_range_os[0]:fit_plot_range_os[1]], offset(T_data[fit_plot_range_os[0]:fit_plot_range_os[1]], *popt_os), 'r--', label=r"$R_R={:.4}\Omega$".format(popt_os[0]), linewidth=self.linewidth_fit)
+		plt.plot(T_data[fit_plot_range_lin[0]:fit_plot_range_lin[1]], lin(T_data[fit_plot_range_lin[0]:fit_plot_range_lin[1]], *popt_lin), '--', color="tab:orange", label=r"Lin. Fit: $R = m\cdot T + n$"+"\n"+r"$m={:.3}\Omega$/K".format(popt_lin[0])+"\n"+r"$n={:.3}\Omega$".format(popt_lin[1]), linewidth=self.linewidth_fit)
 		plt.xlabel("Temperatur T / K")
 		plt.ylabel(r"Nb Widerstand R / $\Omega$")
-		#plt.legend()
+		plt.legend()
+		plt.xlim(0,None)
+		plt.ylim(0,None)
 		maximize()
-		plt.savefig(self.export_folder+"Tc_plot_B0"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
+		plt.savefig(self.export_folder+"R_Nb(T)_T_Fit"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
