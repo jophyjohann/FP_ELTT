@@ -14,6 +14,8 @@ class run:
 		self.dpi = 400
 		self.figsize = (6.5, 4.5)
 		self.markersize = 10
+		self.linewidth_fit = 2
+
 
 
 	def main(self):
@@ -166,11 +168,11 @@ class run:
 		plot_range = [670, 770]
 		fit_range = [None, None]
 		
-		fit_range_os_l = [-50, None]
+		fit_range_os_l = [-40, None]
 		fit_plot_range_os_l = [None, None]
 		#fit_plot_range_os_l = fit_range_os_l
 		
-		fit_range_os_r = [None, -65]
+		fit_range_os_r = [None, -70]
 		fit_plot_range_os_r = [None, None]
 		#fit_plot_range_os_r = fit_range_os_r
 			
@@ -189,7 +191,7 @@ class run:
 		R_p_10p = (popt_os_r[0] - popt_os_l[0]) * 0.1 + popt_os_l[0]
 		search_points = R_data[fit_range_os_l[1]:fit_range_os_l[0]]
 		R_10p = search_points[np.abs(search_points-R_p_10p).argmin()]
-		Tc_10p = min(T_data[np.where(R_data==R_10p)])
+		Tc_10p = max(T_data[np.where(R_data==R_10p)])
 		print("Tc @ 10% = ",Tc_10p)
 			
 		R_p_90p = (popt_os_r[0] - popt_os_l[0]) * 0.9 + popt_os_l[0]
@@ -206,14 +208,20 @@ class run:
 		Tc_90p_B_0 = Tc_90p
 		R_10p_B_0 = R_10p - R0_MB
 		R_90p_B_0 = R_90p - R0_MB
-			
+
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T_data_B_0, R_data_B_0, '.', color = "deepskyblue", markersize=self.markersize)
 		T_data = np.linspace(T_data[0],T_data[-1],1000)
-		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l), 'w--', markersize=self.markersize)
-		plt.plot(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], offset(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], *popt_os_r), 'w--', markersize=self.markersize)
-		plt.plot(Tc_10p, R_10p, 'w+', markersize=20)
-		plt.plot(Tc_90p, R_90p, 'w+', markersize=20)
+		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l) - R0_MB, 'w--', markersize=self.markersize)
+		plt.plot(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], offset(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], *popt_os_r) - R0_MB, 'w--', markersize=self.markersize)
+		plt.ylim(0, 0.011)
+		plt.xlim(8, 10.6)
+		plt.hlines(R_10p_B_0, min(T_data), max(T_data), color="grey", linestyle="--", linewidth=self.linewidth_fit)
+		plt.hlines(R_90p_B_0, min(T_data), max(T_data), color="grey", linestyle="--", linewidth=self.linewidth_fit)
+		plt.vlines(Tc_10p, fig.axes.get_ylim()[0], fig.axes.get_ylim()[1], color="r", linestyle="--", linewidth=self.linewidth_fit)
+		plt.vlines(Tc_90p, fig.axes.get_ylim()[0], fig.axes.get_ylim()[1], color="r", linestyle="--", linewidth=self.linewidth_fit)
+		plt.plot(Tc_10p, R_10p_B_0, 'w+', markersize=20)
+		plt.plot(Tc_90p, R_90p_B_0, 'w+', markersize=20)
 		plt.xlabel("Temperatur T / K")
 		plt.ylabel(r"Nb Widerstand R / $\Omega$")
 		#plt.title("Tc Plot für I = 0A")
@@ -229,7 +237,7 @@ class run:
 		plot_range = [970, 1100]
 		fit_range = [None, None]
 		
-		fit_range_os_l = [None, 75]
+		fit_range_os_l = [None, 70]
 		fit_plot_range_os_l = [None, None]
 		#fit_plot_range_os_l = fit_range_os_l
 		
@@ -252,7 +260,7 @@ class run:
 		R_p_10p = (popt_os_r[0] - popt_os_l[0]) * 0.1 + popt_os_l[0]
 		search_points = R_data[fit_range_os_l[1]:fit_range_os_l[0]]
 		R_10p = search_points[np.abs(search_points-R_p_10p).argmin()]
-		Tc_10p = min(T_data[np.where(R_data==R_10p)])
+		Tc_10p = max(T_data[np.where(R_data==R_10p)])
 		print("Tc @ 10% = ",Tc_10p)
 			
 		R_p_90p = (popt_os_r[0] - popt_os_l[0]) * 0.9 + popt_os_l[0]
@@ -262,21 +270,28 @@ class run:
 		print("Tc @ 90% = ",Tc_90p)
 		
 		T_data_B_1 = T_data
-		R_data_B_1 = R_data
+		R_data_B_1 = R_data - R0_MB
 		Tc_10p_B_1 = Tc_10p
 		Tc_90p_B_1 = Tc_90p
-		R_10p_B_1 = R_10p
-		R_90p_B_1 = R_90p
+		R_10p_B_1 = R_10p - R0_MB
+		R_90p_B_1 = R_90p - R0_MB
 		
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
-		plt.plot(T_data, R_data, '.', color="tab:green", markersize=self.markersize)
+		plt.plot(T_data, R_data_B_1, '.', color="tab:green", markersize=self.markersize)
 		T_data = np.linspace(T_data[0],T_data[-1],1000)
-		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l), 'w--', markersize=self.markersize)
-		plt.plot(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], offset(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], *popt_os_r), 'w--', markersize=self.markersize)
-		plt.plot(Tc_10p, R_10p, 'w+', markersize=20)
-		plt.plot(Tc_90p, R_90p, 'w+', markersize=20)
+		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l) - R0_MB, 'w--', markersize=self.markersize)
+		plt.plot(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], offset(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], *popt_os_r) - R0_MB, 'w--', markersize=self.markersize)
+		plt.ylim(0, 0.011)
+		plt.xlim(6.2, 8.6)
+		plt.hlines(R_10p_B_1, min(T_data), max(T_data), color="grey", linestyle="--", linewidth=self.linewidth_fit)
+		plt.hlines(R_90p_B_1, min(T_data), max(T_data), color="grey", linestyle="--", linewidth=self.linewidth_fit)
+		plt.vlines(Tc_10p, fig.axes.get_ylim()[0], fig.axes.get_ylim()[1], color="r", linestyle="--", linewidth=self.linewidth_fit)
+		plt.vlines(Tc_90p, fig.axes.get_ylim()[0], fig.axes.get_ylim()[1], color="r", linestyle="--", linewidth=self.linewidth_fit)
+		plt.plot(Tc_10p, R_10p_B_1, 'w+', markersize=20)
+		plt.plot(Tc_90p, R_90p_B_1, 'w+', markersize=20)
 		plt.xlabel("Temperatur T / K")
 		plt.ylabel(r"Nb Widerstand R / $\Omega$")
+		#plt.ylim(0, None)
 		#plt.title("Tc Plot für I = 0A")
 		maximize()
 		plt.savefig(self.export_folder+"Tc_plot_B1"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
@@ -292,12 +307,12 @@ class run:
 		fit_range = [None, None]
 		
 		#fit_range_os_l = [-65, None]
-		fit_range_os_l = [-38, None]
+		fit_range_os_l = [-35, None]
 		fit_plot_range_os_l = [None, None]
 		#fit_plot_range_os_l = fit_range_os_l
 		
 		#fit_range_os_r = [None, -80]
-		fit_range_os_r = [None, -47]
+		fit_range_os_r = [None, -50]
 		fit_plot_range_os_r = [None, None]
 		#fit_plot_range_os_r = fit_range_os_r
 			
@@ -316,7 +331,7 @@ class run:
 		R_p_10p = (popt_os_r[0] - popt_os_l[0]) * 0.1 + popt_os_l[0]
 		search_points = R_data[fit_range_os_l[1]:fit_range_os_l[0]]
 		R_10p = search_points[np.abs(search_points-R_p_10p).argmin()]
-		Tc_10p = min(T_data[np.where(R_data==R_10p)])
+		Tc_10p = max(T_data[np.where(R_data==R_10p)])
 		print("Tc @ 10% = ",Tc_10p)
 			
 		R_p_90p = (popt_os_r[0] - popt_os_l[0]) * 0.9 + popt_os_l[0]
@@ -326,21 +341,28 @@ class run:
 		print("Tc @ 90% = ",Tc_90p)
 		
 		T_data_B_2 = T_data
-		R_data_B_2 = R_data
+		R_data_B_2 = R_data - R0_MB
 		Tc_10p_B_2 = Tc_10p
 		Tc_90p_B_2 = Tc_90p
-		R_10p_B_2 = R_10p
-		R_90p_B_2 = R_90p
+		R_10p_B_2 = R_10p - R0_MB
+		R_90p_B_2 = R_90p - R0_MB
 		
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
-		plt.plot(T_data, R_data, '.', color="tab:orange", markersize=self.markersize)
+		plt.plot(T_data, R_data_B_2, '.', color="tab:orange", markersize=self.markersize)
 		T_data = np.linspace(T_data[0],T_data[-1],1000)
-		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l), 'w--', markersize=self.markersize)
-		plt.plot(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], offset(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], *popt_os_r), 'w--', markersize=self.markersize)
-		plt.plot(Tc_10p, R_10p, 'w+', markersize=20)
-		plt.plot(Tc_90p, R_90p, 'w+', markersize=20)
+		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l) - R0_MB, 'w--', markersize=self.markersize)
+		plt.plot(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], offset(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], *popt_os_r) - R0_MB, 'w--', markersize=self.markersize)
+		plt.ylim(0, 0.011)
+		plt.xlim(7.1, 9.25)
+		plt.hlines(R_10p_B_2, min(T_data), max(T_data), color="grey", linestyle="--", linewidth=self.linewidth_fit)
+		plt.hlines(R_90p_B_2, min(T_data), max(T_data), color="grey", linestyle="--", linewidth=self.linewidth_fit)
+		plt.vlines(Tc_10p, fig.axes.get_ylim()[0], fig.axes.get_ylim()[1], color="r", linestyle="--", linewidth=self.linewidth_fit)
+		plt.vlines(Tc_90p, fig.axes.get_ylim()[0], fig.axes.get_ylim()[1], color="r", linestyle="--", linewidth=self.linewidth_fit)
+		plt.plot(Tc_10p, R_10p_B_2, 'w+', markersize=20)
+		plt.plot(Tc_90p, R_90p_B_2, 'w+', markersize=20)
 		plt.xlabel("Temperatur T / K")
 		plt.ylabel(r"Nb Widerstand R / $\Omega$")
+		#plt.ylim(0, None)
 		#plt.title("Tc Plot für I = 0A")
 		maximize()
 		plt.savefig(self.export_folder+"Tc_plot_B2"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
@@ -358,6 +380,7 @@ class run:
 		plt.xlabel("Temperatur T / K")
 		plt.ylabel(r"Nb Widerstand R / $\Omega$")
 		plt.xlim(5, None)
+		plt.ylim(0, None)
 		#plt.title("Tc Plot für I = 0A")
 		#plt.legend(loc='lower right')
 		plt.legend(loc='upper left', markerscale=2)
