@@ -114,7 +114,7 @@ class run:
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T_data, R_data, '.', color = "deepskyblue", markersize=self.markersize)
 		T_data = np.linspace(T_data[0],T_data[-1],1000)
-		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l), 'r--', linewidth=self.linewidth_fit, label=r"$R^0_{MB}$"+r"={:.4}m$\Omega$".format(R0_MB*1e3))
+		plt.plot(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], offset(T_data[fit_plot_range_os_l[0]:fit_plot_range_os_l[1]], *popt_os_l), '--', color="tab:red", linewidth=self.linewidth_fit, label=r"$R^0_{MB}$"+r"={:.4}m$\Omega$".format(R0_MB*1e3))
 		plt.plot(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], offset(T_data[fit_plot_range_os_r[0]:fit_plot_range_os_r[1]], *popt_os_r), '--', color="tab:orange", linewidth=self.linewidth_fit)
 		#plt.vlines(Tc_50p, fig.axes.get_ylim()[0], fig.axes.get_ylim()[1], 'g--')
 		plt.vlines(Tc_50p, fig.axes.get_ylim()[0], fig.axes.get_ylim()[1], color="w", linestyle="--", linewidth=self.linewidth_fit, label=r"$T_C$={:.4}K".format(Tc_50p))
@@ -246,7 +246,7 @@ class run:
 		print(r"Resistance of Cu over Temperature")
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T,R_P_1,'.', color = "deepskyblue", markersize=self.markersize)
-		plt.plot(T[fit_range3[0]:fit_range3[1]], func1(T[fit_range3[0]:fit_range3[1]], *popt1), 'r--', label=r"Fit: $R = a\cdot T^3 + R_R$"+"\n"+r"$R_R={:.3}\Omega$".format(popt1[2]), linewidth=self.linewidth_fit)
+		plt.plot(T[fit_range3[0]:fit_range3[1]], func1(T[fit_range3[0]:fit_range3[1]], *popt1), '--', color="tab:red", label=r"Fit: $R = a\cdot T^3 + R_R$"+"\n"+r"$R_R={:.3}\Omega$".format(popt1[2]), linewidth=self.linewidth_fit)
 		#+"\n"+r"$\Rightarrow$ R(4.2K)={:.4}$\Omega$".format(K_1)
 		plt.plot(T[fit_range[0]:fit_range[1]], lin(T[fit_range[0]:fit_range[1]], *popt2), '--', color="tab:orange", label=r"Lin. Fit: $R = m\cdot T + n$"+"\n"+r"m={:.3}$\Omega$/K".format(popt2[0])+"\n"+r"n={:.4}$\Omega$".format(popt2[1]), linewidth=self.linewidth_fit)
 		#+"\n"+r"$\Rightarrow$ R(300K)={:.4}$\Omega$".format(K_2)
@@ -281,7 +281,7 @@ class run:
 		
 		# Reduced data, ie y= R(T)/R(Theta_D), und x = T/Theta_D
 		# Resistivity is rho= (A/l)*R, Calling constant C = (A/l) = pi*r^2/l
-		C = np.pi*(0.08*10**(-3))/1  # Kürtzt sich einfach bei dem Plot 
+		C = np.pi * (0.5 * 0.16e-3)**2  # Kürtzt sich einfach bei dem Plot 
 		R_Theta_D = lin(Theta_D_Cu, m, n)
 		rho = [T/Theta_D_Cu, R_T/R_Theta_D]
 		
@@ -408,18 +408,18 @@ class run:
 		print("ln(sigma) of Si over inverse Temperature")
 		
 		e=1.602176634e-19 
-		kbt=(1.38064852e-23)/e # eV/K
+		Kb=(1.38064852e-23)/e # eV/K
 		
 		print("Parameter der lin Fits:\n")
 		print("m = {:.4g} +/- {:.4g}, n = {:.4g} +/- {:.4g}".format(popt_sigma_lin[0], np.diag(pcov_sigma_lin)[0], popt_sigma_lin[1], np.diag(pcov_sigma_lin)[1]))
-		print("E_Don = {:.4g} +/- {:.4g} eV".format(-2*popt_sigma_lin[0]*kbt, np.abs(-2*kbt*np.diag(pcov_sigma_lin)[0])))
+		print("E_Don = {:.4g} +/- {:.4g} eV".format(-2*popt_sigma_lin[0]*Kb, np.abs(-2*Kb*np.diag(pcov_sigma_lin)[0])))
 		E_donor_lit = 0.045 # eV
-		print("E_Don_lit - E_Don_1 = {:.4g}".format(np.abs(E_donor_lit + 2*popt_sigma_lin[0]*kbt)))
+		print("E_Don_lit - E_Don_1 = {:.4g}".format(np.abs(E_donor_lit + 2*popt_sigma_lin[0]*Kb)))
 
 		
 		fig = plt.figure(figsize=self.figsize2, dpi=80).add_subplot(1, 1, 1)
-		plt.plot(x[plot_range[0]:plot_range[1]], y[plot_range[0]:plot_range[1]],'.', label='ln($\sigma$)', color = "deepskyblue", markersize=self.markersize)
-		plt.plot(x[fit_plot_range2[0]:fit_plot_range2[1]], lin(x, *popt_sigma_lin)[fit_plot_range2[0]:fit_plot_range2[1]], 'r--', label=r"Lin. Fit: $R = m\cdot\frac{1}{T} + n$"+"\n"+r"m={:.4}$\pm${:.3}".format(popt_sigma_lin[0],np.sqrt(np.diag(pcov_sigma_lin))[0]), linewidth=self.linewidth_fit)
+		plt.plot(x[plot_range[0]:plot_range[1]], y[plot_range[0]:plot_range[1]],'.', color = "deepskyblue", markersize=self.markersize)
+		plt.plot(x[fit_plot_range2[0]:fit_plot_range2[1]], lin(x, *popt_sigma_lin)[fit_plot_range2[0]:fit_plot_range2[1]], '--', color="tab:red", label=r"Lin. Fit: $\ln(\sigma) = m\cdot\frac{1}{T} + n$"+"\n"+r"m={:.4}K".format(popt_sigma_lin[0]), linewidth=self.linewidth_fit)
 		plt.xlabel(r"reziproke Temperatur 1 / T")
 		plt.ylabel(r"ln($\sigma$)")
 		plt.legend(markerscale=2, loc="lower left")
@@ -459,7 +459,7 @@ class run:
 		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
 		plt.plot(T_data, R_data, '.', color = "deepskyblue", markersize=self.markersize)
 		#T_data = np.linspace(T_data[0],T_data[-1],1000)
-		plt.plot(T_data[fit_plot_range_os[0]:fit_plot_range_os[1]], offset(T_data[fit_plot_range_os[0]:fit_plot_range_os[1]], *popt_os), 'r--', label=r"$R_R={:.4}\Omega$".format(popt_os[0]), linewidth=self.linewidth_fit)
+		plt.plot(T_data[fit_plot_range_os[0]:fit_plot_range_os[1]], offset(T_data[fit_plot_range_os[0]:fit_plot_range_os[1]], *popt_os), '--', color="tab:red", label=r"$R_R={:.4}\Omega$".format(popt_os[0]), linewidth=self.linewidth_fit)
 		plt.plot(T_data[fit_plot_range_lin[0]:fit_plot_range_lin[1]], lin(T_data[fit_plot_range_lin[0]:fit_plot_range_lin[1]], *popt_lin), '--', color="tab:orange", label=r"Lin. Fit: $R = m\cdot T + n$"+"\n"+r"$m={:.3}\Omega$/K".format(popt_lin[0])+"\n"+r"$n={:.3}\Omega$".format(popt_lin[1]), linewidth=self.linewidth_fit)
 		plt.xlabel("Temperatur T / K")
 		plt.ylabel(r"Widerstand R / $\Omega$")
@@ -468,4 +468,41 @@ class run:
 		plt.ylim(0,None)
 		maximize()
 		plt.savefig(self.export_folder+"R_Nb(T)_T_Fit"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
+		plt.show()
+
+
+		
+		n_Nb = popt_lin[1]
+		m_Nb = popt_lin[0]
+		R_R_Nb = popt_os[0]
+		Theta_D_Nb = -1.17 * (n_Nb - R_R_Nb) / (0.17 * m_Nb)
+
+		print("Theta_D = {:.4}".format(Theta_D_Nb))
+
+		R_T = R_P_1 - R_R_Nb
+			
+		C_Nb = np.pi * (0.5 * 0.5e-3)**2 / 0.1
+		R_Theta_D = lin(Theta_D_Nb, m_Nb, n_Nb)
+		rho_Nb = [T/Theta_D_Nb, R_T/R_Theta_D]
+		
+		rho_Nb[0] = rho_Nb[0][2620:None]
+		rho_Nb[1] = rho_Nb[1][2620:None]
+		# Plot Reduced data, ie y= R(T)/R(Theta_D), und x = T/Theta_D
+		print(r"Reduced Resistivity of Cu over reduced Temperature")
+		fig = plt.figure(figsize=self.figsize, dpi=80).add_subplot(1, 1, 1)
+		plt.plot(rho[0], rho[1],'.', label=r'Cu-Probe', color = "deepskyblue", markersize=self.markersize)
+		plt.plot(rho_Nb[0], rho_Nb[1],'.', label=r'Nb-Probe', color = "silver", markersize=self.markersize)
+		plt.plot(Na_T, Na_R,'.', color="tab:green", label='Na', markersize=self.markersize2)
+		plt.plot(Au_T, Au_R,'.', color="orange", label='Au', markersize=self.markersize2)
+		plt.plot(Cu_T, Cu_R,'.', color="tab:red", label='Cu', markersize=self.markersize2)
+		plt.plot(Al_T, Al_R,'.', color="darkorchid", label='Al', markersize=self.markersize2)
+		plt.plot(Ni_T, Ni_R,'.', color="tab:brown", label='Ni', markersize=self.markersize2)
+		
+		plt.xlabel(r"Reduz. Temperatur T / $\Theta_D$")
+		plt.ylabel(r"Reduz. Widerstand R / R($\Theta_D$)")
+		plt.legend(markerscale=2)
+		plt.xlim(0, 0.41)
+		plt.ylim(0, 0.3)
+		maximize()
+		plt.savefig(self.export_folder+"R(T)_red"+self.export_extension, bbox_inches='tight', dpi=self.dpi)
 		plt.show()
